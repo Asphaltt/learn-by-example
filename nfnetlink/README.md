@@ -2,7 +2,7 @@
 
 最近在学习 `iptables NFQUEUE` 的时候，顺手使用 Go 语言写了一个例子。
 
-> 源代码：[github.com/Asphaltt/go-nfnetlink-example](https://github.com/Asphaltt/learn-by-example/tree/main/nfnetlink)
+> 源代码：[github.com/Asphaltt/learn-by-example/nfnetlink](https://github.com/Asphaltt/learn-by-example/tree/main/nfnetlink)
 
 ## 例子的效果
 
