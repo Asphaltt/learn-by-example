@@ -86,6 +86,22 @@ PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
 --- 1.1.1.1 ping statistics ---
 4 packets transmitted, 0 received, 100% packet loss, time 3075ms
 
+# make clean
+rm -f iptables-ebpf-acl.elf
+rm -f iptables-ebpf-acl
+iptables -D OUTPUT -m bpf --object-pinned /sys/fs/bpf/ipt_acl -j DROP
+rm -f /sys/fs/bpf/ipt_acl
+
+# ping -c4 -W1 1.1.1.1
+PING 1.1.1.1 (1.1.1.1) 56(84) bytes of data.
+64 bytes from 1.1.1.1: icmp_seq=1 ttl=59 time=1.64 ms
+64 bytes from 1.1.1.1: icmp_seq=2 ttl=59 time=0.841 ms
+64 bytes from 1.1.1.1: icmp_seq=3 ttl=59 time=0.906 ms
+64 bytes from 1.1.1.1: icmp_seq=4 ttl=59 time=3.26 ms
+
+--- 1.1.1.1 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3021ms
+rtt min/avg/max/mdev = 0.841/1.661/3.257/0.973 ms
 ```
 
 ## demo 系统环境
@@ -106,4 +122,4 @@ Linux vultr 5.13.0-28-generic #31-Ubuntu SMP Thu Jan 13 17:41:06 UTC 2022 x86_64
 
 诚如该公众号文章所说，该匹配算法并不局限于 iptables xt_bpf，而能够适用于任何使用 eBPF 匹配网络包的场景，譬如 XDP、TC，甚至是 Open vSwitch 中基于 eBPF 的扩展。
 
-看似完美的 **O(1)** 匹配算法，却有一个*致命*的缺陷：保存规则的 bitmap 有长度限制，在使用的时候就需要预估好 bitmap 的大小且无法动态扩容。比如，保存 1000 条规则需要使用 256 字节大小的 bitmap。然而，看似*致命*，但大部分场景使用的规则数量都不会超过 100 条。
+看似完美的 **O(1)** 匹配算法，却有一个*致命*的缺陷：保存规则的 bitmap 有长度限制，在使用的时候就需要预估好 bitmap 的大小且无法动态扩容。比如，保存 1024 条规则需要使用 128 字节大小的 bitmap。然而，看似*致命*，但大部分场景使用的规则数量都不会超过 100 条。

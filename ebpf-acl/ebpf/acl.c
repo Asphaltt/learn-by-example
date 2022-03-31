@@ -50,6 +50,7 @@ int filter_iptables(void *skb) {
   if (daddr == NULL) return BPF_OK;
 
   result.key = saddr->key & daddr->key;
+  result.key = result.key & ((~result.key) + 1);  // get the very first bit
 
   res = bpf_map_lookup_elem(&filter_rules, &result);
   if (res != NULL && *res == 1) return BPF_DROP;
