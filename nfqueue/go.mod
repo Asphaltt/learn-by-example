@@ -11,5 +11,5 @@ require (
 	github.com/mdlayher/socket v0.0.0-20210307095302-262dc9984e00 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	golang.org/x/net v0.0.0-20210525063256-abc453219eb5 // indirect
-	golang.org/x/sys v0.0.0-20210820121016-41cdb8703e55 // indirect
+	golang.org/x/sys v0.0.0-20211109184856-51b60fd695b3 // indirect
 )
