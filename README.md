@@ -7,3 +7,4 @@ Learn something interesting by examples.
 2. [`nfnetlink`(`iptables-nfqueue`) in Go](./nfnetlink/)
 3. [`nfqueue`(another example of `iptables-nfqueue`) in Go](./nfqueue/)
 4. [`demo for 「eBPF 技术实践：高性能 ACL」`](./ebpf-acl/)
+5. [`为 eBPF 程序注入黑魔法`](./ebpf-inject/)
