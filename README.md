@@ -9,3 +9,4 @@ Learn something interesting by examples.
 4. [`demo for 「eBPF 技术实践：高性能 ACL」`](./ebpf-acl/)
 5. [`为 eBPF 程序注入黑魔法`](./ebpf-inject/)
 6. [`bpf2bpf functions call example`](./ebpf-bpf2bpf/)
+7. [`bpf_tail_call() example`](./ebpf-bpftailcall/)

@@ -3,6 +3,7 @@ go 1.18
 use (
 	./ebpf-acl
 	./ebpf-bpf2bpf
+	./ebpf-bpftailcall
 	./ebpf-inject
 	./nfnetlink
 	./nfqueue
