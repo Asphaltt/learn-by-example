@@ -2,3 +2,4 @@
 
 /ebpf-bpf2bpf/tcpconn_*
 /ebpf-bpftailcall/tcpconn_*
+/ebpf-globalvar/tcpconn_*

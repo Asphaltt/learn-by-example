@@ -1,4 +1,5 @@
 # learn-by-example
+
 Learn something interesting by examples.
 
 ---
@@ -10,3 +11,4 @@ Learn something interesting by examples.
 5. [`为 eBPF 程序注入黑魔法`](./ebpf-inject/)
 6. [`bpf2bpf functions call example`](./ebpf-bpf2bpf/)
 7. [`bpf_tail_call() example`](./ebpf-bpftailcall/)
+8. [`eBPF global variables`](./ebpf-globalvar/)
