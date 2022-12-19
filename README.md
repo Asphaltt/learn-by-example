@@ -12,3 +12,4 @@ Learn something interesting by examples.
 6. [`bpf2bpf functions call example`](./ebpf-bpf2bpf/)
 7. [`bpf_tail_call() example`](./ebpf-bpftailcall/)
 8. [`eBPF global variables`](./ebpf-globalvar/)
+9. [`XDP metadata 实战指南`](./xdpmetadata/)

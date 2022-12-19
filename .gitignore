@@ -3,3 +3,8 @@
 /ebpf-bpf2bpf/tcpconn_*
 /ebpf-bpftailcall/tcpconn_*
 /ebpf-globalvar/tcpconn_*
+/xdpmetadata/xdpmetadata
+
+*_bpfe*
+
+*.excalidraw

@@ -9,4 +9,5 @@ use (
 	./nfnetlink
 	./nfqueue
 	./nsenter
+	./xdpmetadata
 )
