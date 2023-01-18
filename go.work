@@ -10,4 +10,5 @@ use (
 	./nfqueue
 	./nsenter
 	./xdpmetadata
+	./xdpping
 )
