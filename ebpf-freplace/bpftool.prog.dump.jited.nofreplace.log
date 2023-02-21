@@ -1,0 +1,118 @@
+int k_tcp_connect(struct pt_regs * ctx):
+bpf_prog_cd28f94ebba99a0e_k_tcp_connect:
+; sk = (typeof(sk))PT_REGS_PARM1(ctx);
+   0:	nopl	(%rax,%rax)
+   5:	nop
+   7:	pushq	%rbp
+   8:	movq	%rsp, %rbp
+   b:	movq	112(%rdi), %rsi
+; handle_new_connection(ctx, sk);
+   f:	callq	0x30c
+; return stub_handler();
+  14:	callq	0x3fc
+; return stub_handler();
+  19:	xorl	%eax, %eax
+  1b:	leave
+  1c:	retq
+  1d:	int3
+
+void handle_new_connection(struct pt_regs * ctx, struct sock * sk):
+bpf_prog_93a5a8fde5afab51_handle_new_connection:
+; void handle_new_connection(struct pt_regs *ctx, struct sock *sk)
+   0:	nopl	(%rax,%rax)
+   5:	nop
+   7:	pushq	%rbp
+   8:	movq	%rsp, %rbp
+   b:	subq	$24, %rsp
+  12:	pushq	%rbx
+  13:	pushq	%r13
+  15:	pushq	%r14
+  17:	movq	%rsi, %r14
+  1a:	movq	%rdi, %rbx
+  1d:	xorl	%edi, %edi
+; event_t ev = {};
+  1f:	movl	%edi, -8(%rbp)
+  22:	movq	%rdi, -16(%rbp)
+  26:	movl	$4, %edi
+  2b:	movq	%r14, %rdx
+  2e:	addq	%rdi, %rdx
+  31:	movq	%rbp, %r13
+; 
+  34:	addq	$-16, %r13
+; ev.saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
+  38:	movq	%r13, %rdi
+  3b:	movl	$4, %esi
+  40:	callq	0xffffffffd15665f8
+  45:	xorl	%edi, %edi
+  47:	movq	%r14, %rdx
+  4a:	addq	%rdi, %rdx
+  4d:	movq	%rbp, %rdi
+; 
+  50:	addq	$-20, %rdi
+; ev.daddr = BPF_CORE_READ(sk, __sk_common.skc_daddr);
+  54:	movl	$4, %esi
+  59:	callq	0xffffffffd15665f8
+; ev.daddr = BPF_CORE_READ(sk, __sk_common.skc_daddr);
+  5e:	movl	-20(%rbp), %edi
+; ev.daddr = BPF_CORE_READ(sk, __sk_common.skc_daddr);
+  61:	movl	%edi, -12(%rbp)
+  64:	movl	$14, %edi
+  69:	movq	%r14, %rdx
+  6c:	addq	%rdi, %rdx
+  6f:	movq	%rbp, %rdi
+; 
+  72:	addq	$-20, %rdi
+; ev.sport = BPF_CORE_READ(sk, __sk_common.skc_num);
+  76:	movl	$2, %esi
+  7b:	callq	0xffffffffd15665f8
+; ev.sport = BPF_CORE_READ(sk, __sk_common.skc_num);
+  80:	movzwq	-20(%rbp), %rdi
+; ev.sport = BPF_CORE_READ(sk, __sk_common.skc_num);
+  85:	movw	%di, -8(%rbp)
+  89:	movl	$12, %edi
+  8e:	addq	%rdi, %r14
+  91:	movq	%rbp, %rdi
+; 
+  94:	addq	$-20, %rdi
+; ev.dport = bpf_ntohs(BPF_CORE_READ(sk, __sk_common.skc_dport));
+  98:	movl	$2, %esi
+  9d:	movq	%r14, %rdx
+  a0:	callq	0xffffffffd15665f8
+; ev.dport = bpf_ntohs(BPF_CORE_READ(sk, __sk_common.skc_dport));
+  a5:	movzwq	-20(%rbp), %rdi
+; ev.dport = bpf_ntohs(BPF_CORE_READ(sk, __sk_common.skc_dport));
+  aa:	rorw	$8, %di
+  ae:	movzwl	%di, %edi
+; ev.dport = bpf_ntohs(BPF_CORE_READ(sk, __sk_common.skc_dport));
+  b1:	movw	%di, -6(%rbp)
+; bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &ev, sizeof(ev));
+  b5:	movq	%rbx, %rdi
+  b8:	movabsq	$-104881847943680, %rsi
+  c2:	movl	$4294967295, %edx
+  c7:	movq	%r13, %rcx
+  ca:	movl	$12, %r8d
+  d0:	callq	0xffffffffd1566ab8
+; }
+  d5:	popq	%r14
+  d7:	popq	%r13
+  d9:	popq	%rbx
+  da:	leave
+  db:	retq
+  dc:	int3
+
+int stub_handler():
+bpf_prog_0456a7fc6de84cc2_stub_handler:
+; bpf_printk("freplace, stub handler\n");
+   0:	nopl	(%rax,%rax)
+   5:	nop
+   7:	pushq	%rbp
+   8:	movq	%rsp, %rbp
+   b:	movabsq	$-104881847947504, %rdi
+  15:	movl	$24, %esi
+  1a:	callq	0xffffffffd1568d48
+; return 0;
+  1f:	xorl	%eax, %eax
+  21:	leave
+  22:	retq
+  23:	int3
+

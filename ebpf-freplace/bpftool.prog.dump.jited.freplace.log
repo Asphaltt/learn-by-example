@@ -1,0 +1,16 @@
+int freplace_handler():
+bpf_prog_c293f5345a8a5f0e_freplace_handler:
+; bpf_printk("freplace, replaced handler\n");
+   0:	nopl	(%rax,%rax)
+   5:	nop
+   7:	pushq	%rbp
+   8:	movq	%rsp, %rbp
+   b:	movabsq	$-104881933639920, %rdi
+  15:	movl	$28, %esi
+  1a:	callq	0xffffffffd1568d08
+; return 0;
+  1f:	xorl	%eax, %eax
+  21:	leave
+  22:	retq
+  23:	int3
+

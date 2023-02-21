@@ -4,6 +4,7 @@ use (
 	./ebpf-acl
 	./ebpf-bpf2bpf
 	./ebpf-bpftailcall
+	./ebpf-freplace
 	./ebpf-globalvar
 	./ebpf-inject
 	./nfnetlink
