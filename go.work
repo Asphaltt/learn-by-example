@@ -8,6 +8,7 @@ use (
 	./ebpf-freplace
 	./ebpf-globalvar
 	./ebpf-inject
+	./metadata_xdp2afxdp
 	./nfnetlink
 	./nfqueue
 	./nsenter

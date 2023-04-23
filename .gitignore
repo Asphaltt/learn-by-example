@@ -4,6 +4,7 @@
 /ebpf-bpftailcall/tcpconn_*
 /ebpf-globalvar/tcpconn_*
 /xdpmetadata/xdpmetadata
+/metadata_xdp2afxdp/metadata_xdp2afxdp
 
 *_bpfe*
 

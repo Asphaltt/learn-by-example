@@ -14,3 +14,4 @@ Learn something interesting by examples.
 8. [`eBPF global variables`](./ebpf-globalvar/)
 9. [`XDP metadata 实战指南`](./xdpmetadata/)
 10. [`XDP ping`](./xdpping/)
+11. [`ping latency injection with XDP metadata`](./metadata_xdp2afxdp/)
