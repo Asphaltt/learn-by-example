@@ -2,6 +2,7 @@ go 1.18
 
 use (
 	./ebpf-acl
+	./ebpf-binary_search
 	./ebpf-bpf2bpf
 	./ebpf-bpftailcall
 	./ebpf-fentry_fexit
