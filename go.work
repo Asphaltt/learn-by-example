@@ -9,6 +9,7 @@ use (
 	./ebpf-freplace
 	./ebpf-globalvar
 	./ebpf-inject
+	./ebpf-timer
 	./metadata_xdp2afxdp
 	./nfnetlink
 	./nfqueue
