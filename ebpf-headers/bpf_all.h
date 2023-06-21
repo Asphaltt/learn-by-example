@@ -3,6 +3,8 @@
 
 #include "vmlinux.h"
 
+#include "bpf_tracing_net.h"
+#include "bpf_iter.h"
 #include "bpf_helpers.h"
 #include "bpf_endian.h"
 #include "bpf_core_read.h"
