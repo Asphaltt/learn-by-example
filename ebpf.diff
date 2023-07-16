@@ -1,0 +1,36 @@
+diff --git a/internal/cpu.go b/internal/cpu.go
+index 9e908b6..5dbeb33 100644
+--- a/internal/cpu.go
++++ b/internal/cpu.go
+@@ -3,12 +3,16 @@ package internal
+ import (
+ 	"fmt"
+ 	"os"
++	"runtime"
+ 	"strings"
+ )
+ 
+ // PossibleCPUs returns the max number of CPUs a system may possibly have
+ // Logical CPU numbers must be of the form 0-n
+ var PossibleCPUs = Memoize(func() (int, error) {
++	if runtime.GOOS != "linux" {
++		return runtime.NumCPU(), nil
++	}
+ 	return parseCPUsFromFile("/sys/devices/system/cpu/possible")
+ })
+ 
+diff --git a/prog.go b/prog.go
+index 70aaef5..3eed0aa 100644
+--- a/prog.go
++++ b/prog.go
+@@ -999,7 +999,9 @@ func findTargetInProgram(prog *Program, name string, progType ProgramType, attac
+ 
+ 	var typeName string
+ 	switch (match{progType, attachType}) {
+-	case match{Extension, AttachNone}:
++	case match{Extension, AttachNone},
++		match{Tracing, AttachTraceFEntry},
++		match{Tracing, AttachTraceFExit}:
+ 		typeName = name
+ 	default:
+ 		return 0, errUnrecognizedAttachType

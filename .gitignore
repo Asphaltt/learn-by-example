@@ -1,11 +1,17 @@
 .DS_Store
 
-/ebpf-bpf2bpf/tcpconn_*
-/ebpf-bpftailcall/tcpconn_*
-/ebpf-globalvar/tcpconn_*
-/xdpmetadata/xdpmetadata
-/metadata_xdp2afxdp/metadata_xdp2afxdp
+/ebpf/bpf2bpf/tcpconn_*
+/ebpf/tailcall/tcpconn_*
+/ebpf/global-variable/tcpconn_*
+/ebpf/xdpmetadata/xdpmetadata
+/ebpf/metadata_xdp2afxdp/metadata_xdp2afxdp
+/ebpf/fentry_fexit-bpf2bpf/fentry_fexit-bpf2bpf
+/ebpf/fentry_fexit-tailcall/fentry_fexit-tailcall
+/ebpf/fentry_fexit-freplace/fentry_fexit-freplace
+/ebpf/fentry_fexit-tc/fentry_fexit-tc
+/ebpf/fentry_fexit-xdp/fentry_fexit-xdp
 
 *_bpfe*
 
 *.excalidraw
+*.log

@@ -1,20 +1,26 @@
 go 1.18
 
 use (
-	./ebpf-acl
-	./ebpf-binary_search
-	./ebpf-bpf2bpf
-	./ebpf-bpftailcall
-	./ebpf-fentry_fexit
-	./ebpf-freplace
-	./ebpf-globalvar
-	./ebpf-inject
-	./ebpf-iter
-	./ebpf-timer
-	./metadata_xdp2afxdp
+	./ebpf/acl
+	./ebpf/bpf2bpf
+	./ebpf/bsearch
+	./ebpf/fentry_fexit
+	./ebpf/fentry_fexit-bpf2bpf
+	./ebpf/fentry_fexit-freplace
+	./ebpf/fentry_fexit-tailcall
+	./ebpf/fentry_fexit-tc
+	./ebpf/fentry_fexit-xdp
+	./ebpf/freplace
+	./ebpf/global-variable
+	./ebpf/inject
+	./ebpf/iter
+	./ebpf/metadata_xdp2afxdp
+	./ebpf/tailcall
+	./ebpf/timer
+	./ebpf/xdpmetadata
+	./ebpf/xdpping
+	./internal
 	./nfnetlink
 	./nfqueue
 	./nsenter
-	./xdpmetadata
-	./xdpping
 )
