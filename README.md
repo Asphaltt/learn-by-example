@@ -27,3 +27,4 @@ Learn something interesting by examples.
 15. [`fentry/fexit on tailcall target program` (FAILED)](./ebpf/fentry_fexit-tailcall/)
 16. [`fentry/fexit on bpf2bpf target program`](./ebpf/fentry_fexit-bpf2bpf/)
 17. [`fentry/fexit on freplace program`](./ebpf/fentry_fexit-freplace/)
+18. [`fentry/fexit on freplace program (XDP)`](./ebpf/fentry_fexit-freplace-xdp/)
