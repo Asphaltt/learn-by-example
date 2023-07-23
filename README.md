@@ -28,3 +28,5 @@ Learn something interesting by examples.
 16. [`fentry/fexit on bpf2bpf target program`](./ebpf/fentry_fexit-bpf2bpf/)
 17. [`fentry/fexit on freplace program`](./ebpf/fentry_fexit-freplace/)
 18. [`fentry/fexit on freplace program (XDP)`](./ebpf/fentry_fexit-freplace-xdp/)
+19. [`fentry/fexit on kprobe program`](./ebpf/fentry_fexit-kprobe/)
+20. [`fentry/fexit on tracepoint program`](./ebpf/fentry_fexit-tracepoint/)

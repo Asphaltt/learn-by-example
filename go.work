@@ -8,8 +8,10 @@ use (
 	./ebpf/fentry_fexit-bpf2bpf
 	./ebpf/fentry_fexit-freplace
 	./ebpf/fentry_fexit-freplace-xdp
+	./ebpf/fentry_fexit-kprobe
 	./ebpf/fentry_fexit-tailcall
 	./ebpf/fentry_fexit-tc
+	./ebpf/fentry_fexit-tracepoint
 	./ebpf/fentry_fexit-xdp
 	./ebpf/freplace
 	./ebpf/global-variable
@@ -17,7 +19,9 @@ use (
 	./ebpf/iter
 	./ebpf/metadata_xdp2afxdp
 	./ebpf/tailcall
+	./ebpf/tailcall-shared
 	./ebpf/timer
+	./ebpf/tracepoint
 	./ebpf/xdpmetadata
 	./ebpf/xdpping
 	./internal

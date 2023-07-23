@@ -1,3 +1,6 @@
+// Copyright 2023 Leon Hwang.
+// SPDX-License-Identifier: MIT
+
 package main
 
 import (
@@ -46,17 +49,16 @@ func main() {
 		return
 	}
 
-	tailcallFentry := spec.Programs["fentry_tailcall"]
-	tailcallFentry.AttachTarget = obj.tcpconnPrograms.HandleNewConnection
-	tailcallFentry.AttachTo = "handle_new_connection"
-	tailcallFexit := spec.Programs["fexit_tailcall"]
-	tailcallFexit.AttachTarget = obj.tcpconnPrograms.HandleNewConnection
-	tailcallFexit.AttachTo = "handle_new_connection"
+	kprobeFentry := spec.Programs["fentry_tcp_connect"]
+	kprobeFentry.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
+	kprobeFentry.AttachTo = "k_tcp_connect"
+	kprobeFexit := spec.Programs["fexit_tcp_connect"]
+	kprobeFexit.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
+	kprobeFexit.AttachTo = "k_tcp_connect"
 
 	var ffObj fentryFexitObjects
 	if err := spec.LoadAndAssign(&ffObj, &ebpf.CollectionOptions{
 		MapReplacements: map[string]*ebpf.Map{
-			"socks":  obj.Socks,
 			"events": obj.Events,
 		},
 	}); err != nil {
@@ -71,33 +73,30 @@ func main() {
 	defer ffObj.Close()
 
 	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FentryTailcall,
+		Program: ffObj.FentryTcpConnect,
 	}); err != nil {
-		log.Printf("Failed to attach fentry(tailcall): %v", err)
+		log.Printf("Failed to attach fentry(tcp_connect): %v", err)
 		return
 	} else {
 		defer link.Close()
-		log.Printf("Attached fentry(tailcall)")
+		log.Printf("Attached fentry(tcp_connect)")
 	}
 
 	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FexitTailcall,
+		Program: ffObj.FexitTcpConnect,
 	}); err != nil {
-		log.Printf("Failed to attach fexit(tailcall): %v", err)
+		log.Printf("Failed to attach fexit(tcp_connect): %v", err)
 		return
 	} else {
 		defer link.Close()
-		log.Printf("Attached fexit(tailcall)")
+		log.Printf("Attached fexit(tcp_connect)")
 	}
 
 	// prepare programs for bpf_tail_call()
 	prog := obj.tcpconnPrograms.HandleNewConnection
 	key := uint32(0)
 	if err := obj.tcpconnMaps.Progs.Update(key, prog, ebpf.UpdateAny); err != nil {
-		log.Printf("Failed to prepare tailcall(handle_new_connection): %v", err)
 		return
-	} else {
-		log.Printf("Prepared tailcall(handle_new_connection)")
 	}
 
 	if kp, err := link.Kprobe("tcp_connect", obj.K_tcpConnect, nil); err != nil {
@@ -159,7 +158,7 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 		binary.Read(bytes.NewBuffer(event.RawSample), binary.LittleEndian, &ev)
 
 		switch ev.ProbeType {
-		case 0:
+		default:
 			log.Printf("new tcp connection: %s:%d -> %s:%d (kprobe)",
 				netip.AddrFrom4(ev.Saddr), ev.Sport,
 				netip.AddrFrom4(ev.Daddr), ev.Dport)

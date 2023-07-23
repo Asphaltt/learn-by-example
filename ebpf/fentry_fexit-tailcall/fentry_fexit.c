@@ -1,6 +1,6 @@
 /**
  * Copyright 2023 Leon Hwang.
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: MIT
  */
 
 //go:build ignore
