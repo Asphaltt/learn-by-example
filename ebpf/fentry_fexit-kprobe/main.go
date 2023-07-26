@@ -14,6 +14,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"internal/pkg/bpf"
+
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/perf"
@@ -49,12 +51,18 @@ func main() {
 		return
 	}
 
+	funcName, err := bpf.GetProgEntryFuncName(obj.K_tcpConnect)
+	if err != nil {
+		funcName = "k_tcp_connect"
+		log.Printf("Failed to get function name: %v. Use %s instead", err, funcName)
+	}
+
 	kprobeFentry := spec.Programs["fentry_tcp_connect"]
 	kprobeFentry.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
-	kprobeFentry.AttachTo = "k_tcp_connect"
+	kprobeFentry.AttachTo = funcName
 	kprobeFexit := spec.Programs["fexit_tcp_connect"]
 	kprobeFexit.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
-	kprobeFexit.AttachTo = "k_tcp_connect"
+	kprobeFexit.AttachTo = funcName
 
 	var ffObj fentryFexitObjects
 	if err := spec.LoadAndAssign(&ffObj, &ebpf.CollectionOptions{

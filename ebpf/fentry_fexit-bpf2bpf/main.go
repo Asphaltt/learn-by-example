@@ -40,12 +40,14 @@ func main() {
 		return
 	}
 
+	funcName := "handle_new_connection"
+
 	bpf2bpfFentry := spec.Programs["fentry_bpf2bpf"]
 	bpf2bpfFentry.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
-	bpf2bpfFentry.AttachTo = "handle_new_connection"
+	bpf2bpfFentry.AttachTo = funcName
 	bpf2bpfFexit := spec.Programs["fexit_bpf2bpf"]
 	bpf2bpfFexit.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
-	bpf2bpfFexit.AttachTo = "handle_new_connection"
+	bpf2bpfFexit.AttachTo = funcName
 
 	var ffObj fentryFexitObjects
 	if err := spec.LoadAndAssign(&ffObj, &ebpf.CollectionOptions{

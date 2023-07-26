@@ -11,6 +11,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"internal/pkg/bpf"
+
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/perf"
@@ -46,12 +48,18 @@ func main() {
 		return
 	}
 
+	funcName, err := bpf.GetProgEntryFuncName(obj.HandleNewConnection)
+	if err != nil {
+		funcName = "handle_new_connection"
+		log.Printf("Failed to get function name: %v. Use %s instead", err, funcName)
+	}
+
 	tailcallFentry := spec.Programs["fentry_tailcall"]
 	tailcallFentry.AttachTarget = obj.tcpconnPrograms.HandleNewConnection
-	tailcallFentry.AttachTo = "handle_new_connection"
+	tailcallFentry.AttachTo = funcName
 	tailcallFexit := spec.Programs["fexit_tailcall"]
 	tailcallFexit.AttachTarget = obj.tcpconnPrograms.HandleNewConnection
-	tailcallFexit.AttachTo = "handle_new_connection"
+	tailcallFexit.AttachTo = funcName
 
 	var ffObj fentryFexitObjects
 	if err := spec.LoadAndAssign(&ffObj, &ebpf.CollectionOptions{

@@ -16,6 +16,8 @@ import (
 	"time"
 	"unsafe"
 
+	"internal/pkg/bpf"
+
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/asm"
 	"github.com/cilium/ebpf/link"
@@ -57,12 +59,18 @@ func main() {
 		return
 	}
 
+	funcName, err := bpf.GetProgEntryFuncName(obj.TpNetlinkExtack)
+	if err != nil {
+		funcName = "tp__netlink_extack"
+		log.Printf("Failed to get func name: %v. Use %s instead", err, funcName)
+	}
+
 	tpFentry := spec.Programs["fentry_netlink_extack"]
 	tpFentry.AttachTarget = obj.TpNetlinkExtack
-	tpFentry.AttachTo = "tp__netlink_extack"
+	tpFentry.AttachTo = funcName
 	tpExit := spec.Programs["fexit_netlink_extack"]
 	tpExit.AttachTarget = obj.TpNetlinkExtack
-	tpExit.AttachTo = "tp__netlink_extack"
+	tpExit.AttachTo = funcName
 
 	var ffObj ffObjects
 	if err := spec.LoadAndAssign(&ffObj, &ebpf.CollectionOptions{

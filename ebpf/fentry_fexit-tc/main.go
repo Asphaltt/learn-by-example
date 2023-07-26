@@ -15,6 +15,7 @@ import (
 	"syscall"
 	"unsafe"
 
+	"internal/pkg/bpf"
 	_tc "internal/pkg/tc"
 
 	"github.com/cilium/ebpf"
@@ -61,12 +62,19 @@ func main() {
 	}
 	defer dummyProg.Close()
 
+	// get function name by dummy program
+	funcName, err := bpf.GetProgEntryFuncName(dummyProg)
+	if err != nil {
+		funcName = "dummy"
+		log.Printf("Failed to get dummy program name: %v. Use %s instead", err, funcName)
+	}
+
 	tcFentry := spec.Programs["fentry_tc"]
 	tcFentry.AttachTarget = dummyProg
-	tcFentry.AttachTo = "dummy"
+	tcFentry.AttachTo = funcName
 	tcFexit := spec.Programs["fexit_tc"]
 	tcFexit.AttachTarget = dummyProg
-	tcFexit.AttachTo = "dummy"
+	tcFexit.AttachTo = funcName
 
 	var obj fftcObjects
 	if err := spec.LoadAndAssign(&obj, nil); err != nil {

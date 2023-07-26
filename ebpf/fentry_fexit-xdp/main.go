@@ -58,7 +58,7 @@ func main() {
 	defer dummyProg.Close()
 
 	// get function name by dummy program
-	funcName, err := bpf.GetFuncName(dummyProg)
+	funcName, err := bpf.GetProgEntryFuncName(dummyProg)
 	if err != nil {
 		log.Printf("Failed to get function name: %v", err)
 		return

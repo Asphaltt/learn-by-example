@@ -4,26 +4,31 @@
 package bpf
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/cilium/ebpf"
+	"github.com/cilium/ebpf/btf"
 )
 
-// GetFuncName returns the name of the very first function in the program.
-func GetFuncName(prog *ebpf.Program) (string, error) {
-	progInfo, err := prog.Info()
+// GetProgEntryFuncName returns the name of the entry function in the program.
+func GetProgEntryFuncName(prog *ebpf.Program) (string, error) {
+	btfHandle, err := prog.Handle()
 	if err != nil {
-		return "", fmt.Errorf("failed to get prog info: %w", err)
-	}
-	progInsns, err := progInfo.Instructions()
-	if err != nil {
-		return "", fmt.Errorf("failed to get instructions: %w", err)
-	}
-	funcName := progInsns.Name()
-	if funcName == "" {
-		return "", errors.New("failed to get function name")
+		return "", fmt.Errorf("failed to get prog handle: %w", err)
 	}
 
-	return funcName, nil
+	btfSpec, err := btfHandle.Spec(nil)
+	if err != nil {
+		return "", fmt.Errorf("failed to get prog BTF spec: %w", err)
+	}
+
+	iter := btfSpec.Iterate()
+	for iter.Next() {
+		fn, ok := iter.Type.(*btf.Func)
+		if ok {
+			return fn.Name, nil
+		}
+	}
+
+	return "", fmt.Errorf("failed to find function in prog BTF spec")
 }

@@ -14,6 +14,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"internal/pkg/bpf"
 	"internal/pkg/xdp"
 
 	"github.com/cilium/ebpf"
@@ -88,7 +89,11 @@ func main() {
 		return
 	}
 
-	funcName := "freplace_handler"
+	funcName, err := bpf.GetProgEntryFuncName(frObj.FreplaceHandler)
+	if err != nil {
+		funcName = "freplace_handler"
+		log.Printf("Failed to get function name: %v. Use %s instead", err, funcName)
+	}
 
 	fentryProg := ffSpec.Programs["fentry_freplace_handler"]
 	fentryProg.AttachTarget = frObj.FreplaceHandler
