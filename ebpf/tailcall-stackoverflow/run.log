@@ -1,0 +1,147 @@
+
+
+            curl-3146    [001] d... 121922.059426: bpf_trace_printk: tcp_connect, stack ptr0: 0xc0613ab0, ptrL: 0xc0613b90
+
+            curl-3146    [001] d... 121922.059621: bpf_trace_printk: fentry__tailcall0, stack ptr0: 0xc0613968, ptrL: 0xc0613a48
+
+            curl-3146    [001] d... 121922.059622: bpf_trace_printk: tailcall0, stack ptr0: 0xc06139b0, ptrL: 0xc0613a90
+
+            curl-3146    [001] d... 121922.059623: bpf_trace_printk: fentry__tailcall1, stack ptr0: 0xc0613868, ptrL: 0xc0613948
+
+            curl-3146    [001] d... 121922.059624: bpf_trace_printk: tailcall1, stack ptr0: 0xc06138b0, ptrL: 0xc0613990
+
+            curl-3146    [001] d... 121922.059625: bpf_trace_printk: fentry__tailcall2, stack ptr0: 0xc0613768, ptrL: 0xc0613848
+
+            curl-3146    [001] d... 121922.059626: bpf_trace_printk: tailcall2, stack ptr0: 0xc06137b0, ptrL: 0xc0613890
+
+            curl-3146    [001] d... 121922.059627: bpf_trace_printk: fentry__tailcall3, stack ptr0: 0xc0613668, ptrL: 0xc0613748
+
+            curl-3146    [001] d... 121922.059628: bpf_trace_printk: tailcall3, stack ptr0: 0xc06136b0, ptrL: 0xc0613790
+
+            curl-3146    [001] d... 121922.059629: bpf_trace_printk: fentry__tailcall4, stack ptr0: 0xc0613568, ptrL: 0xc0613648
+
+            curl-3146    [001] d... 121922.059630: bpf_trace_printk: tailcall4, stack ptr0: 0xc06135b0, ptrL: 0xc0613690
+
+            curl-3146    [001] d... 121922.059631: bpf_trace_printk: fentry__tailcall5, stack ptr0: 0xc0613468, ptrL: 0xc0613548
+
+            curl-3146    [001] d... 121922.059632: bpf_trace_printk: tailcall5, stack ptr0: 0xc06134b0, ptrL: 0xc0613590
+
+            curl-3146    [001] d... 121922.059632: bpf_trace_printk: fentry__tailcall6, stack ptr0: 0xc0613368, ptrL: 0xc0613448
+
+            curl-3146    [001] d... 121922.059633: bpf_trace_printk: tailcall6, stack ptr0: 0xc06133b0, ptrL: 0xc0613490
+
+            curl-3146    [001] d... 121922.059634: bpf_trace_printk: fentry__tailcall7, stack ptr0: 0xc0613268, ptrL: 0xc0613348
+
+            curl-3146    [001] d... 121922.059635: bpf_trace_printk: tailcall7, stack ptr0: 0xc06132b0, ptrL: 0xc0613390
+
+            curl-3146    [001] d... 121922.059636: bpf_trace_printk: fentry__tailcall8, stack ptr0: 0xc0613168, ptrL: 0xc0613248
+
+            curl-3146    [001] d... 121922.059637: bpf_trace_printk: tailcall8, stack ptr0: 0xc06131b0, ptrL: 0xc0613290
+
+            curl-3146    [001] d... 121922.059638: bpf_trace_printk: fentry__tailcall9, stack ptr0: 0xc0613068, ptrL: 0xc0613148
+
+            curl-3146    [001] d... 121922.059638: bpf_trace_printk: tailcall9, stack ptr0: 0xc06130b0, ptrL: 0xc0613190
+
+            curl-3146    [001] d... 121922.059639: bpf_trace_printk: fentry__tailcall10, stack ptr0: 0xc0612f68, ptrL: 0xc0613048
+
+            curl-3146    [001] d... 121922.059640: bpf_trace_printk: tailcall10, stack ptr0: 0xc0612fb0, ptrL: 0xc0613090
+
+            curl-3146    [001] d... 121922.059641: bpf_trace_printk: fentry__tailcall11, stack ptr0: 0xc0612e68, ptrL: 0xc0612f48
+
+            curl-3146    [001] d... 121922.059642: bpf_trace_printk: tailcall11, stack ptr0: 0xc0612eb0, ptrL: 0xc0612f90
+
+            curl-3146    [001] d... 121922.059643: bpf_trace_printk: fentry__tailcall12, stack ptr0: 0xc0612d68, ptrL: 0xc0612e48
+
+            curl-3146    [001] d... 121922.059644: bpf_trace_printk: tailcall12, stack ptr0: 0xc0612db0, ptrL: 0xc0612e90
+
+            curl-3146    [001] d... 121922.059644: bpf_trace_printk: fentry__tailcall13, stack ptr0: 0xc0612c68, ptrL: 0xc0612d48
+
+            curl-3146    [001] d... 121922.059645: bpf_trace_printk: tailcall13, stack ptr0: 0xc0612cb0, ptrL: 0xc0612d90
+
+            curl-3146    [001] d... 121922.059647: bpf_trace_printk: fentry__tailcall14, stack ptr0: 0xc0612b68, ptrL: 0xc0612c48
+
+            curl-3146    [001] d... 121922.059647: bpf_trace_printk: tailcall14, stack ptr0: 0xc0612bb0, ptrL: 0xc0612c90
+
+            curl-3146    [001] d... 121922.059648: bpf_trace_printk: fentry__tailcall15, stack ptr0: 0xc0612a68, ptrL: 0xc0612b48
+
+            curl-3146    [001] d... 121922.059649: bpf_trace_printk: tailcall15, stack ptr0: 0xc0612ab0, ptrL: 0xc0612b90
+
+            curl-3146    [001] d... 121922.059650: bpf_trace_printk: fentry__tailcall16, stack ptr0: 0xc0612968, ptrL: 0xc0612a48
+
+            curl-3146    [001] d... 121922.059650: bpf_trace_printk: tailcall16, stack ptr0: 0xc06129b0, ptrL: 0xc0612a90
+
+            curl-3146    [001] d... 121922.059651: bpf_trace_printk: fentry__tailcall17, stack ptr0: 0xc0612868, ptrL: 0xc0612948
+
+            curl-3146    [001] d... 121922.059652: bpf_trace_printk: tailcall17, stack ptr0: 0xc06128b0, ptrL: 0xc0612990
+
+            curl-3146    [001] d... 121922.059653: bpf_trace_printk: fentry__tailcall18, stack ptr0: 0xc0612768, ptrL: 0xc0612848
+
+            curl-3146    [001] d... 121922.059654: bpf_trace_printk: tailcall18, stack ptr0: 0xc06127b0, ptrL: 0xc0612890
+
+            curl-3146    [001] d... 121922.059654: bpf_trace_printk: fentry__tailcall19, stack ptr0: 0xc0612668, ptrL: 0xc0612748
+
+            curl-3146    [001] d... 121922.059655: bpf_trace_printk: tailcall19, stack ptr0: 0xc06126b0, ptrL: 0xc0612790
+
+            curl-3146    [001] d... 121922.059667: bpf_trace_printk: fentry__tailcall20, stack ptr0: 0xc0612568, ptrL: 0xc0612648
+
+            curl-3146    [001] d... 121922.059711: bpf_trace_printk: tailcall20, stack ptr0: 0xc06125b0, ptrL: 0xc0612690
+
+            curl-3146    [001] d... 121922.059712: bpf_trace_printk: fentry__tailcall21, stack ptr0: 0xc0612468, ptrL: 0xc0612548
+
+            curl-3146    [001] d... 121922.059713: bpf_trace_printk: tailcall21, stack ptr0: 0xc06124b0, ptrL: 0xc0612590
+
+            curl-3146    [001] d... 121922.059714: bpf_trace_printk: fentry__tailcall22, stack ptr0: 0xc0612368, ptrL: 0xc0612448
+
+            curl-3146    [001] d... 121922.059715: bpf_trace_printk: tailcall22, stack ptr0: 0xc06123b0, ptrL: 0xc0612490
+
+            curl-3146    [001] d... 121922.059716: bpf_trace_printk: fentry__tailcall23, stack ptr0: 0xc0612268, ptrL: 0xc0612348
+
+            curl-3146    [001] d... 121922.059717: bpf_trace_printk: tailcall23, stack ptr0: 0xc06122b0, ptrL: 0xc0612390
+
+            curl-3146    [001] d... 121922.059718: bpf_trace_printk: fentry__tailcall24, stack ptr0: 0xc0612168, ptrL: 0xc0612248
+
+            curl-3146    [001] d... 121922.059719: bpf_trace_printk: tailcall24, stack ptr0: 0xc06121b0, ptrL: 0xc0612290
+
+            curl-3146    [001] d... 121922.059720: bpf_trace_printk: fentry__tailcall25, stack ptr0: 0xc0612068, ptrL: 0xc0612148
+
+            curl-3146    [001] d... 121922.059721: bpf_trace_printk: tailcall25, stack ptr0: 0xc06120b0, ptrL: 0xc0612190
+
+            curl-3146    [001] d... 121922.059722: bpf_trace_printk: fentry__tailcall26, stack ptr0: 0xc0611f68, ptrL: 0xc0612048
+
+            curl-3146    [001] d... 121922.059723: bpf_trace_printk: tailcall26, stack ptr0: 0xc0611fb0, ptrL: 0xc0612090
+
+            curl-3146    [001] d... 121922.059724: bpf_trace_printk: fentry__tailcall27, stack ptr0: 0xc0611e68, ptrL: 0xc0611f48
+
+            curl-3146    [001] d... 121922.059724: bpf_trace_printk: tailcall27, stack ptr0: 0xc0611eb0, ptrL: 0xc0611f90
+
+            curl-3146    [001] d... 121922.059725: bpf_trace_printk: fentry__tailcall28, stack ptr0: 0xc0611d68, ptrL: 0xc0611e48
+
+            curl-3146    [001] d... 121922.059726: bpf_trace_printk: tailcall28, stack ptr0: 0xc0611db0, ptrL: 0xc0611e90
+
+            curl-3146    [001] d... 121922.059727: bpf_trace_printk: fentry__tailcall29, stack ptr0: 0xc0611c68, ptrL: 0xc0611d48
+
+            curl-3146    [001] d... 121922.059728: bpf_trace_printk: tailcall29, stack ptr0: 0xc0611cb0, ptrL: 0xc0611d90
+
+            curl-3146    [001] d... 121922.059729: bpf_trace_printk: fentry__tailcall30, stack ptr0: 0xc0611b68, ptrL: 0xc0611c48
+
+            curl-3146    [001] d... 121922.059730: bpf_trace_printk: tailcall30, stack ptr0: 0xc0611bb0, ptrL: 0xc0611c90
+
+            curl-3146    [001] d... 121922.059731: bpf_trace_printk: fentry__tailcall31, stack ptr0: 0xc0611a68, ptrL: 0xc0611b48
+
+            curl-3146    [001] d... 121922.059732: bpf_trace_printk: tailcall31, stack ptr0: 0xc0611ab0, ptrL: 0xc0611b90
+
+            curl-3146    [001] d... 121922.059733: bpf_trace_printk: fentry__tailcall32, stack ptr0: 0xc0611968, ptrL: 0xc0611a48
+
+            curl-3146    [001] d... 121922.059734: bpf_trace_printk: tailcall32, stack ptr0: 0xc06119b0, ptrL: 0xc0611a90
+
+            curl-3146    [001] d... 121922.059735: bpf_trace_printk: fentry__tailcall33, stack ptr0: 0xc0611868, ptrL: 0xc0611948
+
+            curl-3146    [001] d... 121922.059735: bpf_trace_printk: tailcall33, stack ptr0: 0xc06118b0, ptrL: 0xc0611990
+
+            curl-3146    [001] d... 121922.059736: bpf_trace_printk: fentry__tailcall34, stack ptr0: 0xc0611768, ptrL: 0xc0611848
+
+            curl-3146    [001] d... 121922.059737: bpf_trace_printk: tailcall34, stack ptr0: 0xc06117b0, ptrL: 0xc0611890
+
+            curl-3146    [001] d... 121922.059738: bpf_trace_printk: fentry__tailcall35, stack ptr0: 0xc0611668, ptrL: 0xc0611748
+
+            curl-3146    [001] d... 121922.059739: bpf_trace_printk: tailcall35, stack ptr0: 0xc06116b0, ptrL: 0xc0611790

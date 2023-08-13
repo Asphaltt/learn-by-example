@@ -3,6 +3,7 @@ go 1.18
 use (
 	./ebpf/acl
 	./ebpf/bpf2bpf
+	./ebpf/bpfprogfuncs
 	./ebpf/bsearch
 	./ebpf/fentry_fexit
 	./ebpf/fentry_fexit-bpf2bpf
@@ -20,8 +21,10 @@ use (
 	./ebpf/metadata_xdp2afxdp
 	./ebpf/tailcall
 	./ebpf/tailcall-shared
+	./ebpf/tailcall-stackoverflow
 	./ebpf/timer
 	./ebpf/tracepoint
+	./ebpf/xdp-cpumap
 	./ebpf/xdpmetadata
 	./ebpf/xdpping
 	./internal

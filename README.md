@@ -30,3 +30,5 @@ Learn something interesting by examples.
 18. [`fentry/fexit on kprobe program`](./ebpf/fentry_fexit-kprobe/)
 19. [`fentry/fexit on tracepoint program`](./ebpf/fentry_fexit-tracepoint/)
 20. [`tracepoint of netlink_extack`](./ebpf/tracepoint/)
+21. [`tailcall shared on multi-processes`](./ebpf/tailcall-shared/)
+22. [`tailcall stack overflow?`](./ebpf/tailcall-stack-overflow/)

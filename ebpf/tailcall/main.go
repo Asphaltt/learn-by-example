@@ -15,11 +15,16 @@ import (
 	"github.com/cilium/ebpf/link"
 	"github.com/cilium/ebpf/perf"
 	"github.com/cilium/ebpf/rlimit"
+	flag "github.com/spf13/pflag"
 )
 
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang tcpconn ./ebpf/tcp-connecting.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
+	var noTailcall bool
+	flag.BoolVar(&noTailcall, "no-tailcall", false, "disable tailcall")
+	flag.Parse()
+
 	if err := rlimit.RemoveMemlock(); err != nil {
 		log.Fatalf("Failed to remove rlimit memlock: %v", err)
 	}
@@ -33,12 +38,16 @@ func main() {
 	}
 	defer obj.Close()
 
-	// prepare programs for bpf_tail_call()
-	prog := obj.tcpconnPrograms.HandleNewConnection
-	key := uint32(0)
-	if err := obj.tcpconnMaps.Progs.Update(key, prog, ebpf.UpdateAny); err != nil {
-		log.Printf("Failed to prepare prog(handle_new_connection): %v", err)
-		return
+	if !noTailcall {
+		// prepare programs for bpf_tail_call()
+		prog := obj.tcpconnPrograms.HandleNewConnection
+		key := uint32(0)
+		if err := obj.tcpconnMaps.Progs.Update(key, prog, ebpf.UpdateAny); err != nil {
+			log.Printf("Failed to prepare prog(handle_new_connection): %v", err)
+			return
+		} else {
+			log.Printf("Prepared prog(handle_new_connection)")
+		}
 	}
 
 	if kp, err := link.Kprobe("tcp_connect", obj.K_tcpConnect, nil); err != nil {

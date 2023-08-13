@@ -62,7 +62,7 @@ int k_tcp_connect(struct pt_regs *ctx)
     __u32 key = 0;
     bpf_map_update_elem(&socks, &key, &sk, BPF_ANY);
 
-    bpf_tail_call_static(ctx, &progs, 0);
+    bpf_tail_call_static(ctx, &progs, 0);   // static tailcall
 
     return 0;
 }
@@ -76,7 +76,8 @@ int k_icsk_complete_hashdance(struct pt_regs *ctx)
     __u32 key = 0;
     bpf_map_update_elem(&socks, &key, &sk, BPF_ANY);
 
-    bpf_tail_call_static(ctx, &progs, 0);
+    u32 idx = BPF_CORE_READ(sk, __sk_common.skc_daddr);
+    bpf_tail_call(ctx, &progs, idx);        // dynamic tailcall
 
     return 0;
 }

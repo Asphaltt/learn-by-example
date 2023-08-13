@@ -6,6 +6,9 @@
 
 #include "bpf_all.h"
 
+#define __IS_INVALID_HDR(hdr, data_end) \
+    ((void *)(hdr) + sizeof(*(hdr)) > (void *)(data_end))
+
 enum probing_type {
     PROBE_TYPE_DEFAULT = 0,
     PROBE_TYPE_FENTRY,
