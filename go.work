@@ -1,4 +1,4 @@
-go 1.18
+go 1.21.0
 
 use (
 	./ebpf/acl
@@ -20,6 +20,7 @@ use (
 	./ebpf/iter
 	./ebpf/metadata_xdp2afxdp
 	./ebpf/tailcall
+	./ebpf/tailcall-in-freplace
 	./ebpf/tailcall-shared
 	./ebpf/tailcall-stackoverflow
 	./ebpf/timer
