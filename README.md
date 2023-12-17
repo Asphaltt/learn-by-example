@@ -32,3 +32,4 @@ Learn something interesting by examples.
 20. [`tracepoint of netlink_extack`](./ebpf/tracepoint/)
 21. [`tailcall shared on multi-processes`](./ebpf/tailcall-shared/)
 22. [`tailcall stack overflow?`](./ebpf/tailcall-stack-overflow/)
+23. [`XDP supports traceroute`](./ebpf/xdp-traceroute/)

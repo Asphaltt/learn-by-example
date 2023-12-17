@@ -34,7 +34,9 @@ import (
 
 func main() {
 	var device string
+	var withoutTracing bool
 	flag.StringVarP(&device, "device", "d", "lo", "device to attach tc-bpf program")
+	flag.BoolVarP(&withoutTracing, "without-tracing", "T", false, "without tracing")
 	flag.Parse()
 
 	ifi, err := netlink.LinkByName(device)
@@ -147,25 +149,27 @@ func main() {
 	}
 	defer rtnl.Filter().Delete(&tcFilterObj)
 
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: obj.FentryTc,
-	}); err != nil {
-		log.Printf("Failed to attach fentry(tc): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fentry(tc)")
-	}
+	if !withoutTracing {
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: obj.FentryTc,
+		}); err != nil {
+			log.Printf("Failed to attach fentry(tc): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fentry(tc)")
+		}
 
-	// attach fexit(tc) to the device
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: obj.FexitTc,
-	}); err != nil {
-		log.Printf("Failed to attach fexit(tc): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fexit(tc)")
+		// attach fexit(tc) to the device
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: obj.FexitTc,
+		}); err != nil {
+			log.Printf("Failed to attach fexit(tc): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fexit(tc)")
+		}
 	}
 
 	go handlePerfEvent(ctx, obj.Events)

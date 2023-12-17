@@ -1,4 +1,4 @@
-go 1.21.0
+go 1.21.3
 
 use (
 	./ebpf/acl
@@ -26,6 +26,7 @@ use (
 	./ebpf/timer
 	./ebpf/tracepoint
 	./ebpf/xdp-cpumap
+	./ebpf/xdp-traceroute
 	./ebpf/xdpmetadata
 	./ebpf/xdpping
 	./internal

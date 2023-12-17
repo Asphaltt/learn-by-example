@@ -14,7 +14,8 @@ static __always_inline __u16 csum_fold_helper(__wsum sum)
 /*
  * Use like `icmph->checksum = ipv4_csum(icmph, ICMP_ECHO_LEN);`
  */
-static __always_inline __u16 ipv4_csum(void *data_start, int data_size)
+static __always_inline __u16
+ipv4_csum(void *data_start, int data_size)
 {
     __wsum sum = 0;
     sum = bpf_csum_diff(0, 0, data_start, data_size, 0);

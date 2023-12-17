@@ -1,6 +1,6 @@
 module tailcall-in-freplace
 
-go 1.21.0
+go 1.21
 
 require (
 	github.com/cilium/ebpf v0.11.0
