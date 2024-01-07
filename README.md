@@ -33,3 +33,4 @@ Learn something interesting by examples.
 21. [`tailcall shared on multi-processes`](./ebpf/tailcall-shared/)
 22. [`tailcall stack overflow?`](./ebpf/tailcall-stack-overflow/)
 23. [`XDP supports traceroute`](./ebpf/xdp-traceroute/)
+24. [`tailcall in bpf2bpf`](./ebpf/tailcall-in-bpf2bpf/)

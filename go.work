@@ -16,10 +16,12 @@ use (
 	./ebpf/fentry_fexit-xdp
 	./ebpf/freplace
 	./ebpf/global-variable
+	./ebpf/infinite-iteration
 	./ebpf/inject
 	./ebpf/iter
 	./ebpf/metadata_xdp2afxdp
 	./ebpf/tailcall
+	./ebpf/tailcall-in-bpf2bpf
 	./ebpf/tailcall-in-freplace
 	./ebpf/tailcall-shared
 	./ebpf/tailcall-stackoverflow
