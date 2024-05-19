@@ -82,10 +82,14 @@ func runXDPTraceroute() {
 		}
 	}
 
+	if err := os.Mkdir(bpffsPath, 0o755); err != nil {
+		log.Fatalf("Failed to create bpffs dir: %v", err)
+	}
+	defer os.RemoveAll(bpffsPath)
+
 	if err := bpffs.MountAt(bpffsPath); err != nil {
 		log.Fatalf("Failed to mount bpffs: %v", err)
 	}
-	defer os.Remove(bpffsPath)
 	defer syscall.Unmount(bpffsPath, 0)
 	defer os.RemoveAll(bpffsPath)
 
