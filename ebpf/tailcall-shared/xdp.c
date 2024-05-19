@@ -1,3 +1,4 @@
+//go:build ignore
 /**
  * Copyright 2023 Leon Hwang.
  * SPDX-License-Identifier: MIT

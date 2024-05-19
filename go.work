@@ -1,8 +1,9 @@
-go 1.21.3
+go 1.22.1
 
 use (
 	./ebpf/acl
 	./ebpf/bpf2bpf
+	./ebpf/bpffs
 	./ebpf/bpfprogfuncs
 	./ebpf/bsearch
 	./ebpf/fentry_fexit
@@ -19,6 +20,7 @@ use (
 	./ebpf/infinite-iteration
 	./ebpf/inject
 	./ebpf/iter
+	./ebpf/kfunc_ffs
 	./ebpf/metadata_xdp2afxdp
 	./ebpf/tailcall
 	./ebpf/tailcall-in-bpf2bpf

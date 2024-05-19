@@ -29,7 +29,9 @@ import (
 
 func main() {
 	var device string
+	var withoutTracing bool
 	flag.StringVarP(&device, "device", "d", "lo", "device to attach XDP program")
+	flag.BoolVarP(&withoutTracing, "without-tracing", "T", false, "without tracing")
 	flag.Parse()
 
 	ifi, err := netlink.LinkByName(device)
@@ -95,25 +97,27 @@ func main() {
 		log.Printf("Attached xdp to %s", device)
 	}
 
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: obj.FentryXdp,
-	}); err != nil {
-		log.Printf("Failed to attach fentry(xdp): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fentry(xdp)")
-	}
+	if !withoutTracing {
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: obj.FentryXdp,
+		}); err != nil {
+			log.Printf("Failed to attach fentry(xdp): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fentry(xdp)")
+		}
 
-	// attach fexit(xdp) to the device
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: obj.FexitXdp,
-	}); err != nil {
-		log.Printf("Failed to attach fexit(xdp): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fexit(xdp)")
+		// attach fexit(xdp) to the device
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: obj.FexitXdp,
+		}); err != nil {
+			log.Printf("Failed to attach fexit(xdp): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fexit(xdp)")
+		}
 	}
 
 	go handlePerfEvent(ctx, obj.Events)
