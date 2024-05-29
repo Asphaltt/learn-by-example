@@ -27,9 +27,10 @@ struct {
     __uint(value_size, 4);
 } events SEC(".maps");
 
-static __always_inline void
+static __noinline void
 __handle_new_connection(void *ctx, struct sock *sk, enum probing_type type, int retval)
 {
+    volatile int ret = retval;
     event_t ev = {};
 
     ev.saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
@@ -37,7 +38,7 @@ __handle_new_connection(void *ctx, struct sock *sk, enum probing_type type, int 
     ev.sport = BPF_CORE_READ(sk, __sk_common.skc_num);
     ev.dport = bpf_ntohs(BPF_CORE_READ(sk, __sk_common.skc_dport));
     ev.probe_type = (__u8)type;
-    ev.retval = (__u8)retval;
+    ev.retval = (__u8)ret;
 
     bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &ev, sizeof(ev));
 }
