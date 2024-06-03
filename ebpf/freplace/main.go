@@ -52,6 +52,7 @@ func main() {
 		}
 
 		frSpec.Programs["freplace_handler"].AttachTarget = tcObj.K_tcpConnect
+		frSpec.Programs["freplace_handler"].AttachTo = "stub_handler"
 
 		var frObj freplaceObjects
 		err = frSpec.LoadAndAssign(&frObj, nil)
@@ -70,15 +71,19 @@ func main() {
 		if err != nil {
 			log.Printf("Failed to freplace: %v", err)
 			return
+		} else {
+			log.Printf("Attached freplace to tcp_connect/stub_handler")
+			defer fr.Close()
 		}
-		defer fr.Close()
 
 		fr, err = link.AttachFreplace(tcObj.K_icskCompleteHashdance, "stub_handler", frObj.FreplaceHandler)
 		if err != nil {
 			log.Printf("Failed to freplace: %v", err)
 			return
+		} else {
+			log.Printf("Attached freplace to inet_csk_complete_hashdance/stub_handler")
+			defer fr.Close()
 		}
-		defer fr.Close()
 	}
 
 	if kprobe, err := link.Kprobe("tcp_connect", tcObj.K_tcpConnect, nil); err != nil {
