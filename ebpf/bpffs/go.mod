@@ -4,6 +4,7 @@ go 1.22.1
 
 require (
 	github.com/cilium/ebpf v0.15.0
+	github.com/iovisor/gobpf v0.2.0
 	github.com/spf13/cobra v1.8.0
 )
 

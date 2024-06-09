@@ -1,6 +1,0 @@
-[submodule "ebpf"]
-	path = cilium_ebpf
-	url = https://github.com/cilium/ebpf.git
-[submodule "ebpf/ebpf"]
-	path = ebpf/ebpf
-	url = https://github.com/cilium/ebpf.git

@@ -2,8 +2,6 @@ module fentry_fexit-tc
 
 go 1.20
 
-replace github.com/cilium/ebpf v0.11.0 => ../ebpf
-
 require (
 	github.com/cilium/ebpf v0.11.0
 	github.com/florianl/go-tc v0.4.2

@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/cilium/ebpf v0.10.0
-	github.com/google/gops v0.3.28
 	github.com/spf13/pflag v1.0.5
 )
 
