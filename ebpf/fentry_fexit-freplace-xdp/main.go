@@ -111,7 +111,7 @@ func main() {
 	if err != nil {
 		var ve *ebpf.VerifierError
 		if errors.As(err, &ve) {
-			log.Printf("Failed to load freplace bpf obj: %v\n%-20v", err, ve)
+			log.Printf("Failed to load freplace bpf obj: %v\n%+v", err, ve)
 		} else {
 			log.Printf("Failed to load freplace bpf obj: %v", err)
 		}
@@ -120,7 +120,8 @@ func main() {
 	defer ffObj.Close()
 
 	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FentryFreplaceHandler,
+		Program:    ffObj.FentryFreplaceHandler,
+		AttachType: ebpf.AttachTraceFEntry,
 	}); err != nil {
 		log.Printf("Failed to attach fentry(freplace): %v", err)
 		return
@@ -130,7 +131,8 @@ func main() {
 	}
 
 	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FexitFreplaceHandler,
+		Program:    ffObj.FexitFreplaceHandler,
+		AttachType: ebpf.AttachTraceFExit,
 	}); err != nil {
 		log.Printf("Failed to attach fexit(freplace): %v", err)
 		return

@@ -17,13 +17,13 @@ int BPF_PROG(fentry_freplace_handler, struct xdp_buff *xdp)
     struct ethhdr *eth = (void *)(long) BPF_CORE_READ(xdp, data);
     struct iphdr *iph = (void *)(eth + 1);
     if ((void *)(iph + 1) > (void *)(long) BPF_CORE_READ(xdp, data_end))
-        return -1;
+        return 0;
 
     if (BPF_CORE_READ(eth, h_proto) != bpf_htons(ETH_P_IP))
-        return -1;
+        return 0;
 
     if (BPF_CORE_READ(iph, protocol) != IPPROTO_ICMP)
-        return -1;
+        return 0;
 
     __handle_packet(ctx, iph, PROBE_TYPE_FENTRY, 0);
 
@@ -38,13 +38,13 @@ int BPF_PROG(fexit_freplace_handler, struct xdp_buff *xdp, int retval)
     struct ethhdr *eth = (void *)(long) BPF_CORE_READ(xdp, data);
     struct iphdr *iph = (void *)(eth + 1);
     if ((void *)(iph + 1) > (void *)(long) BPF_CORE_READ(xdp, data_end))
-        return -1;
+        return 0;
 
     if (BPF_CORE_READ(eth, h_proto) != bpf_htons(ETH_P_IP))
-        return -1;
+        return 0;
 
     if (BPF_CORE_READ(iph, protocol) != IPPROTO_ICMP)
-        return -1;
+        return 0;
 
     __handle_packet(ctx, iph, PROBE_TYPE_FEXIT, 0);
 
