@@ -1,15 +1,18 @@
 module metadata_xdp2afxdp
 
-go 1.19
+go 1.21.0
+
+toolchain go1.22.4
 
 require (
 	github.com/asavie/xdp v0.3.3
-	github.com/cilium/ebpf v0.10.0
+	github.com/cilium/ebpf v0.15.0
 	github.com/spf13/pflag v1.0.5
-	github.com/vishvananda/netlink v1.1.0
+	github.com/vishvananda/netlink v1.2.0-beta
 )
 
 require (
-	github.com/vishvananda/netns v0.0.0-20191106174202-0a2b9b5464df // indirect
-	golang.org/x/sys v0.2.0 // indirect
+	github.com/vishvananda/netns v0.0.0-20211101163701-50045581ed74 // indirect
+	golang.org/x/exp v0.0.0-20230224173230-c95f2b4c22f2 // indirect
+	golang.org/x/sys v0.15.0 // indirect
 )

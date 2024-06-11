@@ -1,6 +1,4 @@
-go 1.22.3
-
-toolchain go1.22.4
+go 1.22.4
 
 use (
 	./ebpf/acl
@@ -20,7 +18,6 @@ use (
 	./ebpf/fentry_fexit-xdp
 	./ebpf/freplace
 	./ebpf/global-variable
-	./ebpf/infinite-iteration
 	./ebpf/inject
 	./ebpf/iter
 	./ebpf/kfunc_ffs
