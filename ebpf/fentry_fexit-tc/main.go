@@ -57,25 +57,34 @@ func main() {
 		return
 	}
 
-	tcDummy := spec.Programs["dummy"]
-	dummyProg, err := ebpf.NewProgram(tcDummy)
+	tcSpec := spec.Copy()
+	delete(tcSpec.Programs, "fentry_tc")
+	delete(tcSpec.Programs, "fexit_tc")
+	tcColl, err := ebpf.NewCollection(tcSpec)
 	if err != nil {
-		log.Fatalf("Failed to create dummy program: %v", err)
+		var ve *ebpf.VerifierError
+		if errors.As(err, &ve) {
+			log.Fatalf("Failed to load tc bpf spec: %v\n%-20v", err, ve)
+		}
+		log.Fatalf("Failed to load tc bpf spec: %v", err)
 	}
-	defer dummyProg.Close()
+	defer tcColl.Close()
+
+	tcProg := tcColl.Programs["entry1"]
 
 	// get function name by dummy program
-	funcName, err := bpf.GetProgEntryFuncName(dummyProg)
+	funcName, err := bpf.GetProgEntryFuncName(tcProg)
 	if err != nil {
 		funcName = "dummy"
 		log.Printf("Failed to get dummy program name: %v. Use %s instead", err, funcName)
 	}
 
+	log.Printf("Tracing function: %s", funcName)
 	tcFentry := spec.Programs["fentry_tc"]
-	tcFentry.AttachTarget = dummyProg
+	tcFentry.AttachTarget = tcProg
 	tcFentry.AttachTo = funcName
 	tcFexit := spec.Programs["fexit_tc"]
-	tcFexit.AttachTarget = dummyProg
+	tcFexit.AttachTarget = tcProg
 	tcFexit.AttachTo = funcName
 
 	var obj fftcObjects
@@ -122,7 +131,7 @@ func main() {
 		return binary.BigEndian.Uint16(b[:])
 	}
 
-	progFD := uint32(dummyProg.FD())
+	progFD := uint32(tcProg.FD())
 	annotation := "dummy"
 	tcFlags := uint32(tc.BpfActDirect)
 
