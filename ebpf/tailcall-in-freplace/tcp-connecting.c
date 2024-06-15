@@ -32,7 +32,8 @@ int k_tcp_connect(struct pt_regs *ctx)
     u32 key = 0;
     bpf_map_update_elem(&socks, &key, &sk, BPF_ANY);
 
-    stub_handler(ctx);
+    for (int i = 0; i < 50; i++)
+        stub_handler(ctx);
 
     return 0;
 }
@@ -48,7 +49,8 @@ int k_icsk_complete_hashdance(struct pt_regs *ctx)
     u32 key = 0;
     bpf_map_update_elem(&socks, &key, &sk, BPF_ANY);
 
-    stub_handler(ctx);
+    for (int i = 0; i < 50; i++)
+        stub_handler(ctx);
 
     return 0;
 }

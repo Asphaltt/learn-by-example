@@ -135,6 +135,8 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 		eventReader.Close()
 	}()
 
+	freplaceCnt := 0
+
 	var ev struct {
 		Saddr, Daddr [4]byte
 		Sport, Dport uint16
@@ -165,9 +167,11 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) {
 				netip.AddrFrom4(ev.Daddr), ev.Dport)
 
 		case 3:
-			log.Printf("tcp connection: %s:%d -> %s:%d (freplace)",
+			log.Printf("tcp connection: %s:%d -> %s:%d (freplace: %d)",
 				netip.AddrFrom4(ev.Saddr), ev.Sport,
-				netip.AddrFrom4(ev.Daddr), ev.Dport)
+				netip.AddrFrom4(ev.Daddr), ev.Dport,
+				freplaceCnt)
+			freplaceCnt++
 		}
 
 		select {
