@@ -16,6 +16,7 @@ use (
 	./ebpf/fentry_fexit-tc
 	./ebpf/fentry_fexit-tracepoint
 	./ebpf/fentry_fexit-xdp
+	./ebpf/fexit_rpsxps
 	./ebpf/freplace
 	./ebpf/global-variable
 	./ebpf/inject

@@ -34,3 +34,4 @@ Learn something interesting by examples.
 22. [`tailcall stack overflow?`](./ebpf/tailcall-stack-overflow/)
 23. [`XDP supports traceroute`](./ebpf/xdp-traceroute/)
 24. [`tailcall in bpf2bpf`](./ebpf/tailcall-in-bpf2bpf/)
+25. [`fexit on RPS/XPS`](./ebpf/fexit_rpsxps/)
