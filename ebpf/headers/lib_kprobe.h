@@ -27,20 +27,46 @@ struct {
     __uint(value_size, 4);
 } events SEC(".maps");
 
-static __noinline void
+static __always_inline void
+__set_event(event_t *ev, struct sock *sk, enum probing_type type, int retval)
+{
+    ev->saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
+    ev->daddr = BPF_CORE_READ(sk, __sk_common.skc_daddr);
+    ev->sport = BPF_CORE_READ(sk, __sk_common.skc_num);
+    ev->dport = bpf_ntohs(BPF_CORE_READ(sk, __sk_common.skc_dport));
+    ev->probe_type = (__u8)type;
+    ev->retval = (__u8)retval;
+}
+
+static __always_inline void
 __handle_new_connection(void *ctx, struct sock *sk, enum probing_type type, int retval)
 {
     volatile int ret = retval;
     event_t ev = {};
 
-    ev.saddr = BPF_CORE_READ(sk, __sk_common.skc_rcv_saddr);
-    ev.daddr = BPF_CORE_READ(sk, __sk_common.skc_daddr);
-    ev.sport = BPF_CORE_READ(sk, __sk_common.skc_num);
-    ev.dport = bpf_ntohs(BPF_CORE_READ(sk, __sk_common.skc_dport));
-    ev.probe_type = (__u8)type;
-    ev.retval = (__u8)ret;
+    __set_event(&ev, sk, type, ret);
 
     bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &ev, sizeof(ev));
 }
+
+// static __noinline void
+// handle_new_connection_kprobe(struct pt_regs *ctx, struct sock *sk)
+// {
+//     event_t ev = {};
+
+//     __set_event(&ev, sk, PROBE_TYPE_DEFAULT, 0);
+
+//     bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &ev, sizeof(ev));
+// }
+
+// static __noinline void
+// handle_new_connection_fentry(void *ctx, struct sock *sk, enum probing_type type, int retval)
+// {
+//     event_t ev = {};
+
+//     __set_event(&ev, sk, type, retval);
+
+//     bpf_perf_event_output(ctx, &events, BPF_F_CURRENT_CPU, &ev, sizeof(ev));
+// }
 
 #endif // __LIB_KPROBE_H_

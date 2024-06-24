@@ -6,6 +6,7 @@ use (
 	./ebpf/bpffs
 	./ebpf/bpfprogfuncs
 	./ebpf/bsearch
+	./ebpf/fentry-bpf2bpf
 	./ebpf/fentry_fexit
 	./ebpf/fentry_fexit-bpf2bpf
 	./ebpf/fentry_fexit-freplace
