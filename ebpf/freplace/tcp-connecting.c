@@ -9,6 +9,14 @@
 
 char __license[] SEC("license") = "GPL";
 
+static __noinline int
+stub_handler_static()
+{
+    bpf_printk("freplace, stub handler static\n");
+
+    return 0;
+}
+
 __noinline int
 stub_handler()
 {
@@ -47,6 +55,8 @@ int k_tcp_connect(struct pt_regs *ctx)
 
     handle_new_connection(ctx, sk);
 
+    stub_handler_static();
+
     return stub_handler();
 }
 
@@ -57,6 +67,8 @@ int k_icsk_complete_hashdance(struct pt_regs *ctx)
     sk = (typeof(sk))PT_REGS_PARM2(ctx);
 
     handle_new_connection(ctx, sk);
+
+    stub_handler_static();
 
     return stub_handler();
 }

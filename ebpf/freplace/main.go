@@ -23,7 +23,9 @@ import (
 
 func main() {
 	var withoutFreplace bool
+	var freplaceFailed bool
 	flag.BoolVar(&withoutFreplace, "without-freplace", false, "run without freplace")
+	flag.BoolVar(&freplaceFailed, "freplace-failed", false, "run with freplace failed")
 	flag.Parse()
 
 	if err := rlimit.RemoveMemlock(); err != nil {
@@ -67,21 +69,25 @@ func main() {
 		}
 		defer frObj.Close()
 
-		fr, err := link.AttachFreplace(tcObj.K_tcpConnect, "stub_handler", frObj.FreplaceHandler)
+		stub := "stub_handler"
+		if freplaceFailed {
+			stub = "stub_handler_static"
+		}
+		fr, err := link.AttachFreplace(tcObj.K_tcpConnect, stub, frObj.FreplaceHandler)
 		if err != nil {
-			log.Printf("Failed to freplace: %v", err)
+			log.Printf("Failed to freplace(%s): %v", stub, err)
 			return
 		} else {
-			log.Printf("Attached freplace to tcp_connect/stub_handler")
+			log.Printf("Attached freplace to tcp_connect/%s", stub)
 			defer fr.Close()
 		}
 
-		fr, err = link.AttachFreplace(tcObj.K_icskCompleteHashdance, "stub_handler", frObj.FreplaceHandler)
+		fr, err = link.AttachFreplace(tcObj.K_icskCompleteHashdance, stub, frObj.FreplaceHandler)
 		if err != nil {
-			log.Printf("Failed to freplace: %v", err)
+			log.Printf("Failed to freplace(%s): %v", stub, err)
 			return
 		} else {
-			log.Printf("Attached freplace to inet_csk_complete_hashdance/stub_handler")
+			log.Printf("Attached freplace to inet_csk_complete_hashdance/%s", stub)
 			defer fr.Close()
 		}
 	}
