@@ -35,6 +35,7 @@ use (
 	./ebpf/timer
 	./ebpf/tracepoint
 	./ebpf/xdp-cpumap
+	./ebpf/xdp-crc
 	./ebpf/xdp-traceroute
 	./ebpf/xdpmetadata
 	./ebpf/xdpping
