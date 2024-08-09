@@ -33,6 +33,7 @@ use (
 	./ebpf/tailcall-stackoverflow
 	./ebpf/tcx
 	./ebpf/timer
+	./ebpf/toa
 	./ebpf/tracepoint
 	./ebpf/xdp-cpumap
 	./ebpf/xdp-crc
