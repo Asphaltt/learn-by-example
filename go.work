@@ -31,6 +31,7 @@ use (
 	./ebpf/tailcall-in-freplace1
 	./ebpf/tailcall-shared
 	./ebpf/tailcall-stackoverflow
+	./ebpf/tcpoptions
 	./ebpf/tcx
 	./ebpf/timer
 	./ebpf/toa
