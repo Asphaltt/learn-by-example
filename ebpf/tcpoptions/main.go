@@ -23,8 +23,7 @@ import (
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang topt ./topt.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
-	var way, iface string
-	flag.StringVarP(&way, "way", "w", "1", "use toa way 1, 2 or 3")
+	var iface string
 	flag.StringVarP(&iface, "iface", "i", "lo", "interface to attach")
 	flag.Parse()
 

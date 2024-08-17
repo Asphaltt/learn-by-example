@@ -69,8 +69,8 @@ get_buf(void)
 
 struct tcp_option {
     __u8 opsize;
-    char *opname;
-} tcp_options[] = {
+    char opname[35];
+} __attribute__((packed)) tcp_options[] = {
     [TCPOPT_MSS]        = { TCPOLEN_MSS,        "MSS" },                                /* 2 */
     [TCPOPT_WINDOW]     = { TCPOLEN_WINDOW,     "Window Scale" },                       /* 3 */
     [TCPOPT_SACK_PERM]  = { TCPOLEN_SACK_PERM,  "SACK Permitted" },                     /* 4 */
@@ -160,6 +160,11 @@ parse_option(struct xdp_md *xdp, __u8 /* should not be __u32 */ offset)
     }
 
     switch (opsize) {
+    case 2:
+        if (topt->opname[0] != '\0')
+            bpf_printk("topts: %s: opsize(%d)\n", topt->opname, opsize);
+        break;
+
     case 2+1:
         if (__check(data, data_end, 1))
             bpf_printk("topts: %s: opsize(%d), val: %d\n",
@@ -191,9 +196,9 @@ parse_option(struct xdp_md *xdp, __u8 /* should not be __u32 */ offset)
 SEC("freplace/option_parser")
 int topt(struct xdp_md *xdp)
 {
-    __u32 *buf = get_buf();
-    if (!buf)
+    __u32 *offset = get_buf();
+    if (!offset)
         return -1;
 
-    return parse_option(xdp, *buf);
+    return parse_option(xdp, *offset);
 }

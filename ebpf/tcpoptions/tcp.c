@@ -41,12 +41,13 @@ static void
 __parse_options(struct xdp_md *xdp, struct tcphdr *tcph)
 {
     int length = (tcph->doff << 2) - sizeof(struct tcphdr);
-    int offset = (void *) (tcph + 1) - ctx_ptr(xdp, data);
 
-    __u32 *buf = get_buf();
-    if (!buf)
+    __u32 *offset = get_buf();
+    if (!offset)
         return;
-    *buf = offset;
+
+    /* Initialize offset to tcp options part. */
+    *offset = (void *) (tcph + 1) - ctx_ptr(xdp, data);;
 
     for (int i = 0; i < ((1<<4 /* bits number of doff */)<<2)-sizeof(struct tcphdr); i++) {
         if (length <= 0)
@@ -56,7 +57,7 @@ __parse_options(struct xdp_md *xdp, struct tcphdr *tcph)
         if (ret <= 0)
             break;
 
-        *buf += ret;
+        *offset += ret;
         length -= ret;
     }
 }
