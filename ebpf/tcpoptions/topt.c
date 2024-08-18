@@ -7,6 +7,9 @@
 
 #include "bpf_all.h"
 
+static volatile const __u8 TARGET_OPCODE = 0;
+static volatile const __u8 TARGET_OPVAL[36] = { 0 };
+static volatile const __u32 TARGET_OPVAL_LEN = 0; // including the suffix '\0'
 
 /* Copied from include/net/tcp.h:
  *  TCP option
@@ -109,6 +112,48 @@ __check(void *data, void *data_end, int length)
     return data + length <= data_end;
 }
 
+static __noinline void
+modify_option(void *data, void *data_end, __u8 opsize)
+{
+    int offset = 0;
+
+#define CHECK_SIZE(size) \
+    offset + size <= sizeof(TARGET_OPVAL) && offset + size <= opsize && offset + size <= TARGET_OPVAL_LEN
+
+    for ( ; CHECK_SIZE(8); ) {
+        if (!__check(data, data_end, 8))
+            return;
+
+        *(__u64 *) data = *(__u64 *) &TARGET_OPVAL[offset];
+        offset += 8;
+    }
+
+    if (CHECK_SIZE(4)) {
+        if (!__check(data, data_end, 4))
+            return;
+
+        *(__u32 *) data = *(__u32 *) &TARGET_OPVAL[offset];
+        offset += 4;
+    }
+
+    if (CHECK_SIZE(2)) {
+        if (!__check(data, data_end, 2))
+            return;
+
+        *(__u16 *) data = *(__u16 *) &TARGET_OPVAL[offset];
+        offset += 2;
+    }
+
+    if (CHECK_SIZE(1)) {
+        if (!__check(data, data_end, 1))
+            return;
+
+        *(__u8 *) data = TARGET_OPVAL[offset];
+    }
+
+#undef CHECK_SIZE
+}
+
 static int
 parse_option(struct xdp_md *xdp, __u8 /* should not be __u32 */ offset)
 {
@@ -189,6 +234,9 @@ parse_option(struct xdp_md *xdp, __u8 /* should not be __u32 */ offset)
                        topt->opname, opsize, bpf_be64_to_cpu(*(__u64 *) data));
         break;
     }
+
+    if (opcode == TARGET_OPCODE)
+        modify_option(data, data_end, opsize-2);
 
     return opsize;
 }

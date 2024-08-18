@@ -23,9 +23,14 @@ import (
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang topt ./topt.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
-	var iface string
+	var iface, buf string
 	flag.StringVarP(&iface, "iface", "i", "lo", "interface to attach")
+	flag.StringVarP(&buf, "buf", "b", "Hello, world!", "a custom string that will be written to specific tcp option")
 	flag.Parse()
+
+	if len(buf) > 35 {
+		log.Fatalf("buf length should be less than 36")
+	}
 
 	ifi, err := net.InterfaceByName(iface)
 	errx.Check(err, "Failed to get interface by name (%s)", iface)
@@ -42,6 +47,16 @@ func main() {
 	spec, err := loadTopt()
 	errx.Check(err, "Failed to load topt bpf spec")
 	spec.Programs["topt"].AttachTarget = tcpObjs.XdpTops
+
+	var opval [36]byte
+	copy(opval[:], buf)
+	opval[len(buf)] = 0
+	err = spec.RewriteConstants(map[string]interface{}{
+		"TARGET_OPCODE":    uint8(30),
+		"TARGET_OPVAL":     opval,
+		"TARGET_OPVAL_LEN": uint32(len(buf) + 1),
+	})
+	errx.Check(err, "Failed to rewrite constants")
 
 	var toptObjs toptObjects
 	errx.CheckVerifierErr(spec.LoadAndAssign(&toptObjs, &ebpf.CollectionOptions{
