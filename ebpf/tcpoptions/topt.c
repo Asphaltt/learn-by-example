@@ -55,21 +55,6 @@ static volatile const __u32 TARGET_OPVAL_LEN = 0; // including the suffix '\0'
 
 #define TCPOLEN_MARK                    255
 
-struct {
-    __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-    __type(key, int);
-    __type(value, __u32);
-    __uint(max_entries, 1);
-} buf SEC(".maps");
-
-static __always_inline __u32 *
-get_buf(void)
-{
-    int key = 0;
-
-    return bpf_map_lookup_elem(&buf, &key);
-}
-
 struct tcp_option {
     __u8 opsize;
     char opname[35];
@@ -155,13 +140,15 @@ modify_option(void *data, void *data_end, __u8 opsize)
 }
 
 static int
-parse_option(struct xdp_md *xdp, __u8 /* should not be __u32 */ offset)
+parse_option(struct xdp_md *xdp, int offset)
 {
-    void *data = ctx_ptr(xdp, data) + offset;
     void *data_end = ctx_ptr(xdp, data_end);
+    void *data = ctx_ptr(xdp, data);
     struct tcp_option *topt;
     __u8 opcode, opsize;
 
+    offset &= 255;
+    data += offset;
     if (!__check(data, data_end, 1))
         return -1;
 
@@ -242,11 +229,7 @@ parse_option(struct xdp_md *xdp, __u8 /* should not be __u32 */ offset)
 }
 
 SEC("freplace/option_parser")
-int topt(struct xdp_md *xdp)
+int topt(struct xdp_md *xdp, int offset)
 {
-    __u32 *offset = get_buf();
-    if (!offset)
-        return -1;
-
-    return parse_option(xdp, *offset);
+    return parse_option(xdp, offset);
 }

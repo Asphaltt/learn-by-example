@@ -7,21 +7,6 @@
 
 #include "bpf_all.h"
 
-struct {
-    __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-    __type(key, int);
-    __type(value, __u32);
-    __uint(max_entries, 1);
-} buf SEC(".maps");
-
-static __always_inline __u32 *
-get_buf(void)
-{
-    int key = 0;
-
-    return bpf_map_lookup_elem(&buf, &key);
-}
-
 static __always_inline bool
 __check(void *data, void *data_end, int length)
 {
@@ -29,11 +14,12 @@ __check(void *data, void *data_end, int length)
 }
 
 __noinline int
-option_parser(struct xdp_md *xdp)
+option_parser(struct xdp_md *xdp, int offset)
 {
     int ret = 0;
 
     barrier_var(ret);
+    barrier_var(offset);
     return xdp ? 1 : ret;
 }
 
@@ -41,23 +27,20 @@ static void
 __parse_options(struct xdp_md *xdp, struct tcphdr *tcph)
 {
     int length = (tcph->doff << 2) - sizeof(struct tcphdr);
-
-    __u32 *offset = get_buf();
-    if (!offset)
-        return;
+    int offset;
 
     /* Initialize offset to tcp options part. */
-    *offset = (void *) (tcph + 1) - ctx_ptr(xdp, data);;
+    offset = (void *) (tcph + 1) - ctx_ptr(xdp, data);;
 
     for (int i = 0; i < ((1<<4 /* bits number of doff */)<<2)-sizeof(struct tcphdr); i++) {
         if (length <= 0)
             break;
 
-        int ret = option_parser(xdp);
+        int ret = option_parser(xdp, offset);
         if (ret <= 0)
             break;
 
-        *offset += ret;
+        offset += ret;
         length -= ret;
     }
 }
