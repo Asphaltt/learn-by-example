@@ -25,6 +25,7 @@ use (
 	./ebpf/iter
 	./ebpf/kfunc_ffs
 	./ebpf/metadata_xdp2afxdp
+	./ebpf/percpu_data
 	./ebpf/tailcall
 	./ebpf/tailcall-in-bpf2bpf
 	./ebpf/tailcall-in-freplace

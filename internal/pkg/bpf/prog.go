@@ -6,6 +6,8 @@ package bpf
 import (
 	"fmt"
 
+	"internal/pkg/errx"
+
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/btf"
 )
@@ -31,4 +33,22 @@ func GetProgEntryFuncName(prog *ebpf.Program) (string, error) {
 	}
 
 	return "", fmt.Errorf("failed to find function in prog BTF spec")
+}
+
+func Load(obj any, load func(obj any, opts *ebpf.CollectionOptions) error) {
+	errx.CheckVerifierErr(load(obj, &ebpf.CollectionOptions{
+		Programs: ebpf.ProgramOptions{
+			LogLevel:    ebpf.LogLevelInstruction | ebpf.LogLevelBranch | ebpf.LogLevelStats,
+			LogDisabled: false,
+		},
+	}), "Failed to load bpf objects")
+}
+
+func LoadWithSpec(spec *ebpf.CollectionSpec, obj any) {
+	errx.CheckVerifierErr(spec.LoadAndAssign(obj, &ebpf.CollectionOptions{
+		Programs: ebpf.ProgramOptions{
+			LogLevel:    ebpf.LogLevelInstruction | ebpf.LogLevelBranch | ebpf.LogLevelStats,
+			LogDisabled: false,
+		},
+	}), "Failed to load bpf objects")
 }
