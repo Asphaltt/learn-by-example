@@ -4,35 +4,65 @@
 package bpf
 
 import (
+	"errors"
 	"fmt"
 
 	"internal/pkg/errx"
 
 	"github.com/cilium/ebpf"
-	"github.com/cilium/ebpf/btf"
+	"golang.org/x/sys/unix"
 )
 
 // GetProgEntryFuncName returns the name of the entry function in the program.
 func GetProgEntryFuncName(prog *ebpf.Program) (string, error) {
-	btfHandle, err := prog.Handle()
+	info, err := prog.Info()
 	if err != nil {
-		return "", fmt.Errorf("failed to get prog handle: %w", err)
+		return "", fmt.Errorf("failed to get program info: %w", err)
 	}
 
-	btfSpec, err := btfHandle.Spec(nil)
-	if err != nil {
-		return "", fmt.Errorf("failed to get prog BTF spec: %w", err)
+	if _, ok := info.BTFID(); !ok {
+		return "", fmt.Errorf("program does not have BTF ID")
 	}
 
-	iter := btfSpec.Iterate()
-	for iter.Next() {
-		fn, ok := iter.Type.(*btf.Func)
-		if ok {
-			return fn.Name, nil
+	insns, err := info.Instructions()
+	if err != nil {
+		return "", fmt.Errorf("failed to get program instructions: %w", err)
+	}
+
+	for _, insn := range insns {
+		if sym := insn.Symbol(); sym != "" {
+			return sym, nil
 		}
 	}
 
-	return "", fmt.Errorf("failed to find function in prog BTF spec")
+	return "", fmt.Errorf("no entry function found in program")
+}
+
+func ListProgs(typ ebpf.ProgramType) ([]*ebpf.Program, error) {
+	var (
+		id  ebpf.ProgramID
+		err error
+	)
+
+	var progs []*ebpf.Program
+	for id, err = ebpf.ProgramGetNextID(id); err == nil; id, err = ebpf.ProgramGetNextID(id) {
+		prog, err := ebpf.NewProgramFromID(id)
+		if err != nil {
+			return nil, err
+		}
+
+		if prog.Type() == typ {
+			progs = append(progs, prog)
+		} else {
+			_ = prog.Close()
+		}
+	}
+
+	if !errors.Is(err, unix.ENOENT) { //  err != nil always
+		return nil, err
+	}
+
+	return progs, nil
 }
 
 func Load(obj any, load func(obj any, opts *ebpf.CollectionOptions) error) {

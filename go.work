@@ -12,6 +12,7 @@ use (
 	./ebpf/fentry_fexit-freplace
 	./ebpf/fentry_fexit-freplace-xdp
 	./ebpf/fentry_fexit-kprobe
+	./ebpf/fentry_fexit-sockops
 	./ebpf/fentry_fexit-tailcall
 	./ebpf/fentry_fexit-tailcall_in_bpf2bpf
 	./ebpf/fentry_fexit-tc
