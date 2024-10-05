@@ -140,14 +140,14 @@ modify_option(void *data, void *data_end, __u8 opsize)
 }
 
 static int
-parse_option(struct xdp_md *xdp, int offset)
+parse_option(struct xdp_md *xdp, __u8 offset)
 {
     void *data_end = ctx_ptr(xdp, data_end);
     void *data = ctx_ptr(xdp, data);
     struct tcp_option *topt;
     __u8 opcode, opsize;
 
-    offset &= 255;
+    /* offset &= 255; */ /* r2 &= 255 is applied by int to __u8 automatically */
     data += offset;
     if (!__check(data, data_end, 1))
         return -1;
