@@ -41,6 +41,7 @@ use (
 	./ebpf/tracepoint
 	./ebpf/xdp-cpumap
 	./ebpf/xdp-crc
+	./ebpf/xdp-tailcall
 	./ebpf/xdp-traceroute
 	./ebpf/xdpmetadata
 	./ebpf/xdpping
