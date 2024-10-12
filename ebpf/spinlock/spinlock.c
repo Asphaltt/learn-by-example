@@ -6,28 +6,28 @@
 
 #include "bpf_all.h"
 
-struct class_spinlock_t {
+struct guard_spinlock_t {
     struct bpf_spin_lock *lock;
 };
 
 void
-class_spinlock_destructor(struct class_spinlock_t *class)
+guard_spinlock_destructor(struct guard_spinlock_t *guard)
 {
-    bpf_spin_unlock(class->lock);
+    bpf_spin_unlock(guard->lock);
 }
 
-#define class_spinlock_constructor(lock)        \
+#define guard_spinlock_constructor(lock)        \
 ({                                              \
-    struct class_spinlock_t class = { lock };   \
+    struct guard_spinlock_t guard = { lock };   \
     bpf_spin_lock(lock);                        \
-    class;                                      \
+    guard;                                      \
 })
 
 #define __cleanup(fn) __attribute__((cleanup(fn)))
 
 #define guard(lock)                                                     \
-	struct class_spinlock_t var __cleanup(class_spinlock_destructor) =  \
-        class_spinlock_constructor(lock)
+    struct guard_spinlock_t var __cleanup(guard_spinlock_destructor) =  \
+        guard_spinlock_constructor(lock)
 
 struct xdp_stat_item {
     u64 pkt_cnt;
