@@ -6,28 +6,7 @@
 
 #include "bpf_all.h"
 
-struct guard_spinlock_t {
-    struct bpf_spin_lock *lock;
-};
-
-void
-guard_spinlock_destructor(struct guard_spinlock_t *guard)
-{
-    bpf_spin_unlock(guard->lock);
-}
-
-#define guard_spinlock_constructor(lock)        \
-({                                              \
-    struct guard_spinlock_t guard = { lock };   \
-    bpf_spin_lock(lock);                        \
-    guard;                                      \
-})
-
-#define __cleanup(fn) __attribute__((cleanup(fn)))
-
-#define guard(lock)                                                     \
-    struct guard_spinlock_t var __cleanup(guard_spinlock_destructor) =  \
-        guard_spinlock_constructor(lock)
+#include "bpf_cleanup.h"
 
 struct xdp_stat_item {
     u64 pkt_cnt;
@@ -58,7 +37,7 @@ int xdp_fn(struct xdp_md *ctx)
 
     stat = (typeof(stat))bpf_map_lookup_elem(&stats, &key);
     if (stat) {
-        guard(&stat->lock);
+        guard_spinlock(&stat->lock);
         stat->pkt_cnt++;
         stat->pkt_byte += (u64)(ctx->data_end - ctx->data);
     }
