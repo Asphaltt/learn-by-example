@@ -56,9 +56,9 @@ guard_ringbuf_destructor(struct guard_ringbuf *guard)
     guard;                                              \
 })
 
-#define guard_ringbuf(ringbuf, data, err)                           \
+#define guard_ringbuf(_ringbuf, _data, _err)                        \
     struct guard_ringbuf _g __cleanup(guard_ringbuf_destructor) =   \
-        guard_ringbuf_constructor(ringbuf, sizeof(*data), err);     \
-    data = (typeof(data)) _g.data;
+        guard_ringbuf_constructor(_ringbuf, sizeof(*data), _err);   \
+    _data = (typeof(_data)) _g.data;
 
 #endif // __BPF_CLEANUP_H_
