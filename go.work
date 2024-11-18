@@ -4,15 +4,16 @@ use (
 	./ebpf/acl
 	./ebpf/bpf2bpf
 	./ebpf/bpffs
+	./ebpf/bpflbr
 	./ebpf/bpfprogfuncs
 	./ebpf/bsearch
 	./ebpf/fentry-bpf2bpf
+	./ebpf/fentry-leak
 	./ebpf/fentry_fexit
 	./ebpf/fentry_fexit-bpf2bpf
 	./ebpf/fentry_fexit-freplace
 	./ebpf/fentry_fexit-freplace-xdp
 	./ebpf/fentry_fexit-kprobe
-	./ebpf/fentry-leak
 	./ebpf/fentry_fexit-sockops
 	./ebpf/fentry_fexit-tailcall
 	./ebpf/fentry_fexit-tailcall_in_bpf2bpf
