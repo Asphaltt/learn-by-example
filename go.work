@@ -34,6 +34,7 @@ use (
 	./ebpf/tailcall-in-bpf2bpf
 	./ebpf/tailcall-in-freplace
 	./ebpf/tailcall-in-freplace1
+	./ebpf/tailcall-inspect
 	./ebpf/tailcall-shared
 	./ebpf/tailcall-stackoverflow
 	./ebpf/tcpoptions
