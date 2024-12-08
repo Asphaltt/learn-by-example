@@ -6,6 +6,7 @@ package errx
 import (
 	"errors"
 	"log"
+	"strings"
 
 	"github.com/cilium/ebpf"
 )
@@ -13,7 +14,11 @@ import (
 func Check(err error, format string, args ...interface{}) {
 	if err != nil {
 		args = append(args, err)
-		log.Fatalf(format+": %v", args...)
+		if strings.HasSuffix(format, ": %v") {
+			log.Fatalf(format, args...)
+		} else {
+			log.Fatalf(format+": %v", args...)
+		}
 	}
 }
 
@@ -23,8 +28,7 @@ func CheckVerifierErr(err error, format string, args ...interface{}) {
 		if errors.As(err, &ve) {
 			log.Printf("Verifier error: %+v", ve)
 		}
-		args = append(args, err)
-		log.Fatalf(format+": %v", args...)
+		Check(err, format, args...)
 	}
 }
 
