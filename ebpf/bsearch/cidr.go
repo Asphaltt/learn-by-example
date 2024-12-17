@@ -3,10 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"net/netip"
 	"os"
 	"sort"
 
-	"inet.af/netaddr"
+	"go4.org/netipx"
 )
 
 const cidrCapacity = 128
@@ -35,12 +36,12 @@ func readCidrFile(cidrFile string) ([cidrCapacity]cidr, int, error) {
 	}
 
 	for i, cidr := range content.Cidrs {
-		pref, err := netaddr.ParseIPPrefix(cidr)
+		pref, err := netip.ParsePrefix(cidr)
 		if err != nil {
 			return cidrs, 0, fmt.Errorf("failed to parse cidr %s: %w", cidr, err)
 		}
 
-		rang := pref.Range()
+		rang := netipx.RangeOfPrefix(pref)
 		start, end := rang.From().As4(), rang.To().As4()
 		cidrs[i].Start = be.Uint32(start[:])
 		cidrs[i].End = be.Uint32(end[:])
