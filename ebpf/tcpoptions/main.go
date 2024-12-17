@@ -59,7 +59,11 @@ func main() {
 	errx.Check(err, "Failed to rewrite constants")
 
 	var toptObjs toptObjects
-	errx.CheckVerifierErr(spec.LoadAndAssign(&toptObjs, &ebpf.CollectionOptions{}), "Failed to load topt objects")
+	errx.CheckVerifierErr(spec.LoadAndAssign(&toptObjs, &ebpf.CollectionOptions{
+		MapReplacements: map[string]*ebpf.Map{
+			"option_offset": tcpObjs.OptionOffset,
+		},
+	}), "Failed to load topt objects")
 	defer toptObjs.Close()
 
 	l, err := link.AttachFreplace(tcpObjs.XdpTops, "option_parser", toptObjs.Topt)

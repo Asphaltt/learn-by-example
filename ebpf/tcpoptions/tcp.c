@@ -7,6 +7,21 @@
 
 #include "bpf_all.h"
 
+struct {
+    __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+    __uint(max_entries, 1);
+    __type(key, int);
+    __type(value, int);
+} option_offset SEC(".maps");
+
+static __always_inline void
+set_offset(int offset)
+{
+    int key = 0;
+
+    bpf_map_update_elem(&option_offset, &key, &offset, BPF_ANY);
+}
+
 static __always_inline bool
 __check(void *data, void *data_end, int length)
 {
@@ -14,12 +29,11 @@ __check(void *data, void *data_end, int length)
 }
 
 __noinline int
-option_parser(struct xdp_md *xdp, int offset)
+option_parser(struct xdp_md *xdp)
 {
     int ret = 0;
 
     barrier_var(ret);
-    barrier_var(offset);
     return xdp ? 1 : ret;
 }
 
@@ -36,7 +50,8 @@ __parse_options(struct xdp_md *xdp, struct tcphdr *tcph)
         if (length <= 0)
             break;
 
-        int ret = option_parser(xdp, offset);
+        set_offset(offset);
+        int ret = option_parser(xdp);
         if (ret <= 0)
             break;
 

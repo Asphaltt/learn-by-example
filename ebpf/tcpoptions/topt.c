@@ -7,6 +7,25 @@
 
 #include "bpf_all.h"
 
+struct {
+    __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+    __uint(max_entries, 1);
+    __type(key, int);
+    __type(value, int);
+} option_offset SEC(".maps");
+
+static __always_inline int
+get_offset(void)
+{
+    int key = 0, *val;
+
+    val = bpf_map_lookup_elem(&option_offset, &key);
+    if (val)
+        return *val;
+
+    return 0;
+}
+
 static volatile const __u8 TARGET_OPCODE = 0;
 static volatile const __u8 TARGET_OPVAL[36] = { 0 };
 static volatile const __u32 TARGET_OPVAL_LEN = 0; // including the suffix '\0'
@@ -229,7 +248,13 @@ parse_option(struct xdp_md *xdp, __u8 offset)
 }
 
 SEC("freplace/option_parser")
-int topt(struct xdp_md *xdp, int offset)
+int topt(struct xdp_md *xdp)
 {
+    int offset;
+
+    offset = get_offset();
+    if (!offset)
+        return -1;
+
     return parse_option(xdp, offset);
 }
