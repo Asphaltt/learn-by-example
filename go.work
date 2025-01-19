@@ -1,4 +1,4 @@
-go 1.23.3
+go 1.23.4
 
 use (
 	./ebpf/acl
@@ -43,6 +43,7 @@ use (
 	./ebpf/tcx
 	./ebpf/timer
 	./ebpf/toa
+	./ebpf/tp_btf
 	./ebpf/tracepoint
 	./ebpf/xdp-cpumap
 	./ebpf/xdp-crc
