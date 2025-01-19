@@ -24,6 +24,7 @@ use (
 	./ebpf/fexit_ipv4_sysctl
 	./ebpf/fexit_rpsxps
 	./ebpf/freplace
+	./ebpf/global-percpu-data
 	./ebpf/global-variable
 	./ebpf/inject
 	./ebpf/iter
