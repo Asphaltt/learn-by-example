@@ -8,15 +8,16 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
+	"flag"
 	"fmt"
+	"internal/assert"
+	"internal/pkg/bpf"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 	"unsafe"
-
-	"internal/pkg/bpf"
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/asm"
@@ -31,15 +32,38 @@ import (
 )
 
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang tp ./tracepoint.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
+//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang tpbtf ./tp_btf.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang ff ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
+	var runTpBtf bool
+	var withoutTracing bool
+	flag.BoolVar(&withoutTracing, "T", false, "without tracing")
+	flag.BoolVar(&runTpBtf, "tp_btf", false, "Run tp_btf")
+	flag.Parse()
+
 	if err := rlimit.RemoveMemlock(); err != nil {
 		log.Fatalf("Failed to remove rlimit memlock: %v", err)
 	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+
+	if runTpBtf {
+		var obj tpbtfObjects
+		assert.NoVerifierErr(loadTpbtfObjects(&obj, nil), "Failed to load tp_btf bpf obj: %v")
+		defer obj.Close()
+
+		l, err := link.AttachTracing(link.TracingOptions{
+			Program:    obj.TpNetlinkExtack,
+			AttachType: ebpf.AttachTraceRawTp,
+		})
+		assert.NoErr(err, "Failed to attach tracing: %v")
+		defer l.Close()
+
+		running(ctx, obj.ErrmsgPb)
+		return
+	}
 
 	var obj tpObjects
 	if err := loadTpObjects(&obj, nil); err != nil {
@@ -88,24 +112,26 @@ func main() {
 	}
 	defer ffObj.Close()
 
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FentryNetlinkExtack,
-	}); err != nil {
-		log.Printf("Failed to attach fentry(netlink_extack): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fentry(netlink_extack)")
-	}
+	if !withoutTracing {
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: ffObj.FentryNetlinkExtack,
+		}); err != nil {
+			log.Printf("Failed to attach fentry(netlink_extack): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fentry(netlink_extack)")
+		}
 
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FexitNetlinkExtack,
-	}); err != nil {
-		log.Printf("Failed to attach fexit(netlink_extack): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fexit(netlink_extack)")
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: ffObj.FexitNetlinkExtack,
+		}); err != nil {
+			log.Printf("Failed to attach fexit(netlink_extack): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fexit(netlink_extack)")
+		}
 	}
 
 	if tp, err := link.Tracepoint("netlink", "netlink_extack", obj.TpNetlinkExtack, nil); err != nil {
@@ -116,9 +142,13 @@ func main() {
 		defer tp.Close()
 	}
 
+	running(ctx, obj.ErrmsgPb)
+}
+
+func running(ctx context.Context, m *ebpf.Map) {
 	errg, ctx := errgroup.WithContext(ctx)
 	errg.Go(func() error {
-		handlePerfEvent(ctx, obj.ErrmsgPb)
+		handlePerfEvent(ctx, m)
 		return nil
 	})
 
@@ -171,11 +201,11 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) error {
 
 		switch ev.ProbeType {
 		default:
-			log.Printf("Errmsg: %s (tracepoint)", ev.Msg[:ev.Len])
+			log.Printf("Errmsg: %s (tracepoint)", ev.Msg[:min(64, ev.Len)])
 		case 1:
-			log.Printf("Errmsg: %s (fentry)", ev.Msg[:ev.Len])
+			log.Printf("Errmsg: %s (fentry)", ev.Msg[:min(64, ev.Len)])
 		case 2:
-			log.Printf("Errmsg: %s (fexit: %d)", ev.Msg[:ev.Len], ev.Retval)
+			log.Printf("Errmsg: %s (fexit: %d)", ev.Msg[:min(64, ev.Len)], ev.Retval)
 		}
 
 		select {
@@ -185,15 +215,6 @@ func handlePerfEvent(ctx context.Context, events *ebpf.Map) error {
 		}
 	}
 }
-
-// func nullTerminatedString(b []byte) string {
-// 	for i, c := range b {
-// 		if c == 0 {
-// 			return string(b[:i])
-// 		}
-// 	}
-// 	return string(b)
-// }
 
 func newTcProg() (*ebpf.Program, error) {
 	var spec ebpf.ProgramSpec
