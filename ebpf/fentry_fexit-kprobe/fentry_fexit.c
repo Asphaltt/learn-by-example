@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-// go:build ignore
+//go:build ignore
 
 #include "bpf_all.h"
 

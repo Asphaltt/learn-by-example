@@ -8,13 +8,13 @@ import (
 	"context"
 	"encoding/binary"
 	"errors"
+	"flag"
+	"internal/pkg/bpf"
 	"log"
 	"net/netip"
 	"os"
 	"os/signal"
 	"syscall"
-
-	"internal/pkg/bpf"
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
@@ -26,6 +26,10 @@ import (
 //go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc clang fentryFexit ./fentry_fexit.c -- -D__TARGET_ARCH_x86 -I../headers -Wall
 
 func main() {
+	var withoutTracing bool
+	flag.BoolVar(&withoutTracing, "T", false, "without tracing")
+	flag.Parse()
+
 	if err := rlimit.RemoveMemlock(); err != nil {
 		log.Fatalf("Failed to remove rlimit memlock: %v", err)
 	}
@@ -57,10 +61,10 @@ func main() {
 		log.Printf("Failed to get function name: %v. Use %s instead", err, funcName)
 	}
 
-	kprobeFentry := spec.Programs["fentry_tcp_connect"]
+	kprobeFentry := spec.Programs["fentry_kprobe"]
 	kprobeFentry.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
 	kprobeFentry.AttachTo = funcName
-	kprobeFexit := spec.Programs["fexit_tcp_connect"]
+	kprobeFexit := spec.Programs["fexit_kprobe"]
 	kprobeFexit.AttachTarget = obj.tcpconnPrograms.K_tcpConnect
 	kprobeFexit.AttachTo = funcName
 
@@ -80,24 +84,26 @@ func main() {
 	}
 	defer ffObj.Close()
 
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FentryTcpConnect,
-	}); err != nil {
-		log.Printf("Failed to attach fentry(tcp_connect): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fentry(tcp_connect)")
-	}
+	if !withoutTracing {
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: ffObj.FentryKprobe,
+		}); err != nil {
+			log.Printf("Failed to attach fentry(tcp_connect): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fentry(tcp_connect)")
+		}
 
-	if link, err := link.AttachTracing(link.TracingOptions{
-		Program: ffObj.FexitTcpConnect,
-	}); err != nil {
-		log.Printf("Failed to attach fexit(tcp_connect): %v", err)
-		return
-	} else {
-		defer link.Close()
-		log.Printf("Attached fexit(tcp_connect)")
+		if link, err := link.AttachTracing(link.TracingOptions{
+			Program: ffObj.FexitKprobe,
+		}); err != nil {
+			log.Printf("Failed to attach fexit(tcp_connect): %v", err)
+			return
+		} else {
+			defer link.Close()
+			log.Printf("Attached fexit(tcp_connect)")
+		}
 	}
 
 	// prepare programs for bpf_tail_call()
