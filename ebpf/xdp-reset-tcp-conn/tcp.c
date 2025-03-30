@@ -25,6 +25,7 @@ int xdp_fn(struct xdp_md *ctx)
     __u8 buff[sizeof(struct pseudo_header)];
     struct pseudo_header *psh;
     __be32 saddr, daddr, seq;
+    int total_len, delta;
     __u16 sport, dport;
     __u8 *tcp_flags;
 
@@ -47,6 +48,7 @@ int xdp_fn(struct xdp_md *ctx)
     daddr = iph->daddr;
     iph->saddr = daddr;
     iph->daddr = saddr;
+    total_len = bpf_ntohs(iph->tot_len);
     iph->tot_len = bpf_htons(sizeof(struct iphdr) + sizeof(struct tcphdr));
     iph->frag_off = 0;
     iph->ttl = 64;
@@ -77,6 +79,10 @@ int xdp_fn(struct xdp_md *ctx)
     tcph->check = 0;
     tcph->check = ipv4_csum(psh, sizeof(struct pseudo_header) + sizeof(struct tcphdr));
     __builtin_memcpy(psh, buff, sizeof(struct pseudo_header));
+
+    delta = total_len - (sizeof(struct iphdr) + sizeof(struct tcphdr));
+    if (delta > 0)
+        bpf_xdp_adjust_tail(ctx, -delta);
 
     return XDP_TX;
 }
