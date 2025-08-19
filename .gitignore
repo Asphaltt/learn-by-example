@@ -15,3 +15,5 @@
 
 *.excalidraw
 *.log
+/ebpf/fentry-bpf2bpf/fentry-bpf2bpf
+/ebpf/freplace/freplace
