@@ -1,4 +1,4 @@
-go 1.24.1
+go 1.25.0
 
 use (
 	./ebpf/acl
@@ -34,6 +34,7 @@ use (
 	./ebpf/spinlock
 	./ebpf/tailcall
 	./ebpf/tailcall-in-bpf2bpf
+	./ebpf/tailcall-in-fentry
 	./ebpf/tailcall-in-freplace
 	./ebpf/tailcall-in-freplace1
 	./ebpf/tailcall-inspect
