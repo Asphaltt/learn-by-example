@@ -26,6 +26,7 @@ use (
 	./ebpf/freplace
 	./ebpf/global-percpu-data
 	./ebpf/global-variable
+	./ebpf/in-interrupt
 	./ebpf/inject
 	./ebpf/iter
 	./ebpf/kfunc_ffs

@@ -18,3 +18,4 @@
 /ebpf/fentry-bpf2bpf/fentry-bpf2bpf
 /ebpf/freplace/freplace
 /ebpf/tailcall-in-fentry/tailcall-in-fentry
+/ebpf/in-interrupt/in-interrupt
