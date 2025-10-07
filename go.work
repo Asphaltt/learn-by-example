@@ -7,6 +7,7 @@ use (
 	./ebpf/bpflbr
 	./ebpf/bpfprogfuncs
 	./ebpf/bsearch
+	./ebpf/cast-rdonly
 	./ebpf/fd-socket
 	./ebpf/fentry-bpf2bpf
 	./ebpf/fentry-leak
