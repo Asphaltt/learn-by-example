@@ -34,6 +34,7 @@ use (
 	./ebpf/metadata_xdp2afxdp
 	./ebpf/percpu_data
 	./ebpf/preempt
+	./ebpf/refcount-kptr
 	./ebpf/spinlock
 	./ebpf/tailcall
 	./ebpf/tailcall-in-bpf2bpf
