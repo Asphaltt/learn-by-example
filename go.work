@@ -1,4 +1,4 @@
-go 1.25.0
+go 1.25.4
 
 use (
 	./ebpf/acl
@@ -31,6 +31,7 @@ use (
 	./ebpf/inject
 	./ebpf/iter
 	./ebpf/kfunc_ffs
+	./ebpf/memcg-flush-stats
 	./ebpf/metadata_xdp2afxdp
 	./ebpf/percpu_data
 	./ebpf/preempt

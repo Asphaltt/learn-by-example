@@ -20,3 +20,4 @@
 /ebpf/tailcall-in-fentry/tailcall-in-fentry
 /ebpf/in-interrupt/in-interrupt
 /ebpf/preempt/preempt
+/ebpf/memcg-flush-stats/memcg-flush-stats
