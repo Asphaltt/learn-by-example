@@ -31,14 +31,12 @@ func main() {
 	assert.NoVerifierErr(err, "Failed to create bpf collection: %v")
 	defer coll.Close()
 
-	funcName := "memory_stat_show"
-
+	funcName := "memcg_flush_stats"
 	prog := coll.Programs[funcName]
 	link, err := link.AttachTracing(link.TracingOptions{
-		Program:    prog,
-		AttachType: ebpf.AttachTraceFEntry,
+		Program: prog,
 	})
-	assert.NoErr(err, "Failed to attach fentry: %v", err)
+	assert.NoErr(err, "Failed to attach tp_btf(%s): %v", funcName, err)
 	defer link.Close()
 
 	log.Print("Attached! Press Ctrl+C to exit.")

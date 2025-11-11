@@ -9,42 +9,13 @@ char _license[] SEC("license") = "GPL";
 
 extern void css_rstat_flush(struct cgroup_subsys_state *css) __weak __ksym;
 
-static inline struct cftype *of_cft(struct kernfs_open_file *of)
+SEC("tp_btf/memcg_flush_stats")
+int BPF_PROG(memcg_flush_stats, struct mem_cgroup *memcg, s64 stats_updates, bool force, bool needs_flush)
 {
-	return of->kn->priv;
-}
-
-struct cgroup_subsys_state *of_css(struct kernfs_open_file *of)
-{
-	struct cgroup *cgrp = of->kn->parent->priv;
-	struct cftype *cft = of_cft(of);
-
-	/*
-	 * This is open and unprotected implementation of cgroup_css().
-	 * seq_css() is only called from a kernfs file operation which has
-	 * an active reference on the file.  Because all the subsystem
-	 * files are drained before a css is disassociated with a cgroup,
-	 * the matching css from the cgroup's subsys table is guaranteed to
-	 * be and stay valid until the enclosing operation is complete.
-	 */
-	if (cft->ss)
-		return cgrp->subsys[cft->ss->id];
-	else
-		return &cgrp->self;
-}
-
-static inline struct cgroup_subsys_state *seq_css(struct seq_file *seq)
-{
-	return of_css(seq->private);
-}
-
-SEC("fentry/memory_stat_show")
-int BPF_PROG(memory_stat_show, struct seq_file *seq, void *v)
-{
-    struct cgroup_subsys_state *css = seq_css(seq);
-
-    if (css)
-        css_rstat_flush(css);
-
+	if (!force || !needs_flush) {
+		css_rstat_flush(&memcg->css);
+		__bpf_vprintk("memcg_flush_stats: memcg id=%d, stats_updates=%lld, force=%d, needs_flush=%d\n",
+					  memcg->id.id, stats_updates, force, needs_flush);
+	}
     return 0;
 }
