@@ -30,6 +30,7 @@ use (
 	./ebpf/in-interrupt
 	./ebpf/inject
 	./ebpf/iter
+	./ebpf/iter-tcp
 	./ebpf/kfunc_ffs
 	./ebpf/memcg-flush-stats
 	./ebpf/metadata_xdp2afxdp
