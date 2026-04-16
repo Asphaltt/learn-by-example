@@ -7,20 +7,15 @@
 
 #include "bpf_all.h"
 
-static SEC(".data.__percpu") __u32 cnt0 = 0;
-static SEC(".data.__percpu") __u32 cnt1 = 0;
+static SEC(".data.__percpu") __u32 cnt = 0;
 
 SEC("xdp")
 int xdp_prog(struct xdp_md *ctx)
 {
-    if (ctx->rx_queue_index == 0) {
-        cnt0++;
-    } else {
-        cnt1++;
-    }
+    cnt++;
 
     __u32 cpu = bpf_get_smp_processor_id();
-    bpf_printk("cpu: %u, cnt0: %u, cnt1: %u\n", cpu, cnt0, cnt1);
+    bpf_printk("cpu: %u, cnt: %u\n", cpu, cnt);
 
     return XDP_PASS;
 }

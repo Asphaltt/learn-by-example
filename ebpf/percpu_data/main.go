@@ -6,15 +6,14 @@ package main
 import (
 	"context"
 	"fmt"
+	"internal/pkg/bpf"
+	"internal/pkg/errx"
 	"log"
 	"net"
 	"os"
 	"os/signal"
 	"runtime"
 	"syscall"
-
-	"internal/pkg/bpf"
-	"internal/pkg/errx"
 
 	"github.com/cilium/ebpf"
 	"github.com/cilium/ebpf/link"
@@ -69,6 +68,8 @@ func main() {
 			values[i] = value
 		}
 		mapSpec.Contents[0].Value = values
+
+		mapSpec.Name = ".percpu"
 
 		log.Printf("map: %v, contents: %+v", mapSpec, mapSpec.Contents)
 	}
