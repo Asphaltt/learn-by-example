@@ -84,4 +84,6 @@ struct vxlan_hdr {
 #define IP_CSUM_OFF (ETH_HLEN + offsetof(struct iphdr, check))
 #define TOS_OFF (ETH_HLEN + offsetof(struct iphdr, tos))
 
+#define __sink(expr) asm volatile("" : "+g"(expr))
+
 #endif /* __BPF_COMPILER_H__ */

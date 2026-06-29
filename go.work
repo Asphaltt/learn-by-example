@@ -1,4 +1,4 @@
-go 1.25.4
+go 1.26.3
 
 use (
 	./ebpf/acl
@@ -8,6 +8,7 @@ use (
 	./ebpf/bpfprogfuncs
 	./ebpf/bsearch
 	./ebpf/cast-rdonly
+	./ebpf/eliminate-subprog
 	./ebpf/fd-socket
 	./ebpf/fentry-bpf2bpf
 	./ebpf/fentry-leak
