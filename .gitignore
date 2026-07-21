@@ -23,3 +23,4 @@
 /ebpf/memcg-flush-stats/memcg-flush-stats
 /ebpf/iter-tcp/iter-tcp
 /ebpf/eliminate-subprog/eliminate-subprog
+/ebpf/tailcall-fentry-chain/tailcall-fentry-chain
