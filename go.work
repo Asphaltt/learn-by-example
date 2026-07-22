@@ -54,6 +54,7 @@ use (
 	./ebpf/toa
 	./ebpf/tp_btf
 	./ebpf/tracepoint
+	./ebpf/trampoline-flags
 	./ebpf/xdp-cpumap
 	./ebpf/xdp-crc
 	./ebpf/xdp-reset-tcp-conn

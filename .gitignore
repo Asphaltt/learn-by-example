@@ -24,3 +24,4 @@
 /ebpf/iter-tcp/iter-tcp
 /ebpf/eliminate-subprog/eliminate-subprog
 /ebpf/tailcall-fentry-chain/tailcall-fentry-chain
+/ebpf/trampoline-flags/trampoline-flags
